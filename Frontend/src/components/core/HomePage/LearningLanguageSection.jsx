@@ -1,8 +1,8 @@
 import React from 'react'
 import HighlightText from './HighlightText'
-import KnowYourProgress from '../../../assets/images/Know_your_progress.png';
-import CompareWithOthers from '../../../assets/images/Compare_with_others.png';
-import PlanYourLessons from '../../../assets/images/Plan_your_lessons.png';
+import KnowYourProgress from '../../../assets/Images/Know_your_progress.png';
+import CompareWithOthers from '../../../assets/Images/Compare_with_others.png';
+import PlanYourLessons from '../../../assets/Images/Plan_your_lessons.png';
 import CTAButton from './CTAButton';
 
 const LearningLanguageSection = () => {

@@ -1,4 +1,6 @@
-const BASE_URL = import.meta.env.VITE_BASE_URL;
+// const BASE_URL = import.meta.env.VITE_BASE_URL; 
+const BASE_URL = 'https://ede-techy-api.vercel.app/api/v1'; 
+
 
 
 export const categories = {

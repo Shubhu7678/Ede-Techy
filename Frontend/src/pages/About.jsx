@@ -16,7 +16,7 @@ const About = () => {
         <div className=" text-white" >
             {/* Section 1  */}
             <section className="bg-richblack-700">
-                <div className="realtive w-11/12 mx-auto max-w-maxContent flex flex-col items-center gap-3" >
+                <div className="realtive w-11/12 mx-auto pb-4 max-w-maxContent flex flex-col items-center gap-3" >
                     <header className="text-4xl lg:w-[70%] text-center pt-20 font-semibold text-richblack-5">
                         Driving Innovation in Online Education for a <HighlightText text={"Brighter Future"} />
                     </header>
@@ -24,11 +24,11 @@ const About = () => {
                         creating a brighter future by offering cutting-edge courses leveraging emerging technologies,
                         and nurturing a vibrant learning community.
                     </p>
-                    <div className="h-[70px] lg:h-[150px] ">
+                    <div className="hidden md:block md:h-[70px] lg:h-[150px] ">
 
                     </div>
-                    <div className="absolute bottom-[-20%] translate-y-[-50%] flex flex-row gap-3 flex-wrap" >
-                        <img src={BannerImage1} alt="" />
+                    <div className="w-[90%] md:w-full md:absolute md:bottom-[-20%] md:translate-y-[-50%] flex flex-col md:flex-row gap-3 flex-wrap" >
+                        <img className="" src={BannerImage1} alt="" />
                         <img src={BannerImage2} alt="" />
                         <img src={BannerImage3} alt="" />
                     </div>
@@ -67,14 +67,14 @@ const About = () => {
 
                     </div>
                     {/* Vision and Misson */}
-                    <div className="flex flex-row gap-5 mt-28 justify-between" >
+                    <div className="flex flex-col md:flex-row gap-5 mt-28 justify-between" >
                         {/* Our Vision  */}
-                        <div className="lg:w-[45%]">
+                        <div className="w-full md:w-[45%] lg:w-[45%]">
                             <h1 className="text-4xl font-semibold bg-gradient-to-b from-[#FF512F] to-[#F09819] bg-clip-text text-transparent lg:w-[70%] mb-8" >Our Vision</h1>
                             <p>With this vision in mind, we set out on a journey to create an e-learning platform that would revolutionize the way people learn. Our team of dedicated experts worked tirelessly to develop a robust and intuitive platform that combines cutting-edge technology with engaging content, fostering a dynamic and interactive learning experience.</p>
                         </div>
                         {/* Our Mission  */}
-                        <div className="lg:w-[45%]">
+                        <div className="w-full mt-8 md:mt-0  md:w-[45%] lg:w-[45%]">
                             <h1 className="text-4xl font-semibold mb-8" ><HighlightText text={"Our Mission"} /></h1>
                             <p>Our mission goes beyond just delivering courses online. We wanted to create a vibrant community of learners, where individuals can connect, collaborate, and learn from one another. We believe that knowledge thrives in an environment of sharing and dialogue, and we foster this spirit of collaboration through forums, live sessions, and networking opportunities.</p>
                         </div>

@@ -55,7 +55,7 @@ const Home = () => {
                     <CodeBlocks
                         position={`flex-col lg:flex-row`}
                         heading={
-                            <div className="text-4xl font-semibold">
+                            <div className="text-4xl text-center md:text-start font-semibold">
                                 Unlock Your <HighlightText text={"coding potential"} /> with our online courses
                             </div>
                         }
@@ -87,7 +87,7 @@ const Home = () => {
                     <CodeBlocks
                         position={`flex-col lg:flex-row-reverse`}
                         heading={
-                            <div className="text-4xl font-semibold">
+                            <div className="text-4xl text-center md:text-start md:text-4xl font-semibold">
                                 Start <HighlightText text={"coding in seconds"} />
                             </div>
                         }
@@ -166,9 +166,9 @@ const Home = () => {
 
                 <InstructorSection />
                 {/* <h2 className="text-4xl font-bold my-4">Review From Our Students</h2> */}
-                <div className="text-4xl font-bold my-4">
+                <div className="text-4xl font-bold my-4 text-center">
                     Review From Our
-                <HighlightText className="" text={' Students'} />
+                <HighlightText className="" text={'Students'} />
                 </div>
                 <ReviewSlider/>
 

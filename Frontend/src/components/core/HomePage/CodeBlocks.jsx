@@ -11,10 +11,10 @@ const CodeBlocks = ({position , heading, subheading,ctabtn1 , ctabtn2 , codebloc
           {/* section 1  */}
           <div className="w-[100%] lg:w-[50%] flex flex-col gap-8" >
               {heading}
-              <div className="font-bold text-richblack-300 " >
+              <div className="font-bold text-center md:text-start text-richblack-300 " >
                   {subheading}
               </div>
-              <div className="flex w-[90%] md:w-full gap-3 lg:gap-7 ">
+              <div className="flex  justify-center md:justify-start w-full  gap-3 lg:gap-7 ">
                   <CTAButton active={ctabtn1.active} linkto={ctabtn1.linkto} >
                       <div className="flex flex-row gap-2 items-center " >
                           {ctabtn1.text}

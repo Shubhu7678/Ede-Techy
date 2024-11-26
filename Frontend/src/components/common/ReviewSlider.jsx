@@ -50,7 +50,7 @@ const ReviewSlider = () => {
     // console.log("Printing Reviews : ", review);
 
     return (
-        <div className="text-white w-[90%] md:w-full mb-10">
+        <div className="text-white w-[95%] md:w-full mb-10">
             <div className="h-[190px] max-w-maxContent w-11/12 mx-auto">
                 <Swiper
                     pagination={{

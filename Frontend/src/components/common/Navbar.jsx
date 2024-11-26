@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { matchPath, NavLink, useLocation } from 'react-router-dom'
 // import Logo from '../../assets/Logo/Logo-Full-Light.png'; 
-import Logo from '../../assets/Logo/Ede-removebg-preview.png'; 
+import Logo from '../../assets/Logo/Ede-removebg-preview.png';
 // import Logo from '../../assets/Logo/Ede-Techy.png'; 
 import { GiMedusaHead } from "react-icons/gi";
 
@@ -12,6 +12,8 @@ import ProfileDropdown from '../core/Auth/ProfileDropdown';
 import { apiConnector } from '../../services/apiconnector';
 import { categories } from '../../services/apis';
 import { IoIosArrowDropdownCircle } from "react-icons/io";
+import { GiHamburgerMenu } from "react-icons/gi";
+
 
 const Navbar = () => {
 
@@ -19,6 +21,7 @@ const Navbar = () => {
     const { user } = useSelector((state) => state.profile);
     const { totalItems } = useSelector((state) => state.cart);
     const [subLinks, setSubLinks] = useState([]);
+    const [menu, setMenu] = useState(false);
 
     const fetchSubLinks = async () => {
 
@@ -45,6 +48,12 @@ const Navbar = () => {
         return matchPath({ path: route }, location.pathname);
     }
 
+    const toggleMenu = () => {
+
+        setMenu(!menu);
+        console.log(menu);
+    }
+
     return (
         <div className="flex h-14 items-center border-b-[1px] border-b-richblack-700" >
             <div className="flex w-11/12 items-center mx-auto justify-between max-w-maxContent" >
@@ -52,17 +61,16 @@ const Navbar = () => {
                 <NavLink to="/">
                     {/* <img className="text-white bg-richblack-100 rounded-full border border-yellow-50" src={Logo} width={105} height={40} loading='lazy' alt="" /> */}
                     <div className="flex flex-row items-center gap-2">
-                    <GiMedusaHead className="text-yellow-50 text-4xl" />
-                    <p className="text-3xl font-mono text-blue-5">EdeTechy</p>
+                        <GiMedusaHead className="text-yellow-50 text-4xl" />
+                        <p className="text-xl md:text-3xl font-mono text-blue-5">EdeTechy</p>
                     </div>
                 </NavLink>
 
                 {/* Nav */}
-                <nav>
+                <nav className="hidden md:block">
                     <ul className="flex gap-6 text-richblack-25">
                         {NavbarLinks.map((value, index) => (
                             <li key={index}>
-
                                 {value.title === 'Catalog' ? (
 
                                     <div className="flex flex-row items-center gap-1 group relative" >
@@ -90,7 +98,6 @@ const Navbar = () => {
                                                     <div></div>
                                                 )
                                             }
-
                                         </div>
                                     </div>
                                 )
@@ -100,20 +107,17 @@ const Navbar = () => {
                                             <p className={`${matchRoute(value?.path) ? 'text-yellow-25' : 'text-richblack-25'}`} > {value.title}</p>
                                         </NavLink>
                                     )}
-
                             </li>
                         ))}
-
                     </ul>
                 </nav>
 
                 {/* login/Signup/Dashboard  */}
                 <div className="flex gap-4 items-center text-richblack-25">
-                    {/* TODO : Add Styling in this cart */}
                     {
                         user && user.accountType != "Instructor" && (
 
-                            <NavLink to="dashboard/cart" className="relative">
+                            <NavLink to="dashboard/cart" className="hidden md:block relative">
                                 <CiShoppingCart className="text-richblack-100 text-2xl" />
                                 {
                                     totalItems > 0 &&
@@ -130,7 +134,7 @@ const Navbar = () => {
 
                         token === null &&
                         (
-                            <NavLink to="/login" >
+                            <NavLink className="hidden md:block" to="/login" >
                                 <button className="border border-richblack-700 bg-richblack-700 px-2 py-1 hover:scale-95 transition-all duration-200 rounded-md">
                                     Login
                                 </button>
@@ -142,7 +146,7 @@ const Navbar = () => {
 
                         token === null &&
                         (
-                            <NavLink to="/signup" >
+                            <NavLink className="hidden md:block" to="/signup" >
                                 <button className="border border-richblack-700 bg-richblack-700 px-2 py-1 hover:scale-95 transition-all duration-200 rounded-md">
                                     Signup
                                 </button>
@@ -156,8 +160,57 @@ const Navbar = () => {
                         )
 
                     }
+                    <button onClick={toggleMenu} className="md:hidden pr-2">
+                        <GiHamburgerMenu className=" text-2xl" />
+                    </button>
+
                 </div>
             </div>
+            {/* Mobile Menu */}
+            {
+                menu && (
+                    <div className="h-screen w-full absolute top-0 left-0 bg-gradient-to-b from-black to-richblack-800 z-50">
+                        <div className="text-richblack-200 text-xl flex justify-end p-4 cursor-pointer" >
+                            <button onClick={toggleMenu}>
+                                X
+                            </button>  
+                        </div>
+                        <div className="flex flex-col gap-4 py-10 items-center justify-center h-full">
+                            <ul className="flex flex-col gap-10 h-full text-xl text-white text-center">
+                                {NavbarLinks.map((value, index) => (
+                                    <li key={index}>
+                                        <NavLink onClick={toggleMenu} to={value?.path} className="hover:text-richblack-100 duration-300">
+                                            <p className="" > {value.title}</p>
+                                        </NavLink>
+                                    </li>
+                                ))}
+                                {
+                                    token === null &&
+                                    (
+                                        <li>
+                                            <NavLink onClick={toggleMenu} className="" to="/login" >
+                                                <button className="border border-richblack-700 bg-richblack-700 px-3 py-1 hover:scale-95 transition-all duration-200 rounded-md">
+                                                    Login
+                                                </button>
+                                            </NavLink>
+                                        </li>
+                                    )
+                                }
+                                {
+                                    token === null &&
+                                    (
+                                        <NavLink onClick={toggleMenu} className="" to="/signup" >
+                                            <button className="border border-richblack-700 bg-richblack-700 px-2 py-1 hover:scale-95 transition-all duration-200 rounded-md">
+                                                Signup
+                                            </button>
+                                        </NavLink>
+                                    )
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                )
+            }
         </div >
     )
 }

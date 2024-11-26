@@ -24,7 +24,7 @@ const Catalog = () => {
             if (result) {
                 const category_id = result.data.allCategories.filter((category) => category.name === catalogName)[0]._id;
                 toast.dismiss(toastId);
-                console.log(category_id);
+                // console.log(category_id);
                 setCategoryId(category_id);
             }
         }
@@ -90,7 +90,7 @@ const Catalog = () => {
                         >New</p>
                     </div>
                     <div className="mt-4">
-                        {console.log(catalogPageData)}
+                        {/* {console.log(catalogPageData)} */}
                         <CourseSlider
                             Courses={catalogPageData?.selectedCategory?.courses}
                         />
@@ -110,7 +110,7 @@ const Catalog = () => {
                 <div className="mt-10 w-11/12 max-w-maxContent mx-auto">
                     <p className="text-3xl font-semibold">Frequently Bought</p>
                     <div>
-                        <div className="flex mt-8 gap-10 flex-wrap">
+                        <div className="w-[90%] flex mt-8 gap-10 flex-wrap">
                             {
                                 catalogPageData?.mostSellingCourses.map((course, index) =>
                                 (

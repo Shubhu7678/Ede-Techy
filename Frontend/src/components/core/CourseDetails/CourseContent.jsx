@@ -20,7 +20,7 @@ const CourseContent = ({ course, sections, lectures }) => {
     return (
         <div>
             <p className="text-2xl font-semibold text-richblack-100">Course Content</p>
-            <div className="flex flex-row gap-2 text-richblack-100 mt-2">
+            <div className="flex flex-col md:flex-row gap-2 text-richblack-100 mt-2">
                 <p>{sections + " section(s)"}</p>
                 <p>{lectures + " lecture(s)"}</p>
                 <p>10+ hrs total length</p>

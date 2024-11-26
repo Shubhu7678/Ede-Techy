@@ -14,7 +14,6 @@ import { categories } from '../../services/apis';
 import { IoIosArrowDropdownCircle } from "react-icons/io";
 import { GiHamburgerMenu } from "react-icons/gi";
 
-
 const Navbar = () => {
 
     const { token } = useSelector((state) => state.auth);
@@ -22,6 +21,7 @@ const Navbar = () => {
     const { totalItems } = useSelector((state) => state.cart);
     const [subLinks, setSubLinks] = useState([]);
     const [menu, setMenu] = useState(false);
+    const [catalogItems, setCatalogItems] = useState(false);
 
     const fetchSubLinks = async () => {
 
@@ -44,14 +44,15 @@ const Navbar = () => {
     const location = useLocation();
 
     const matchRoute = (route) => {
-
         return matchPath({ path: route }, location.pathname);
     }
 
     const toggleMenu = () => {
-
         setMenu(!menu);
-        console.log(menu);
+    }
+
+    const toggleCatalog = () => {
+        setCatalogItems(!catalogItems);
     }
 
     return (
@@ -102,7 +103,6 @@ const Navbar = () => {
                                     </div>
                                 )
                                     : (
-
                                         <NavLink to={value?.path}>
                                             <p className={`${matchRoute(value?.path) ? 'text-yellow-25' : 'text-richblack-25'}`} > {value.title}</p>
                                         </NavLink>
@@ -173,15 +173,53 @@ const Navbar = () => {
                         <div className="text-richblack-200 text-xl flex justify-end p-4 cursor-pointer" >
                             <button onClick={toggleMenu}>
                                 X
-                            </button>  
+                            </button>
                         </div>
                         <div className="flex flex-col gap-4 py-10 items-center justify-center h-full">
                             <ul className="flex flex-col gap-10 h-full text-xl text-white text-center">
                                 {NavbarLinks.map((value, index) => (
+
                                     <li key={index}>
-                                        <NavLink onClick={toggleMenu} to={value?.path} className="hover:text-richblack-100 duration-300">
-                                            <p className="" > {value.title}</p>
-                                        </NavLink>
+                                        {
+                                            value.title === 'Catalog' ? (
+                                                <>
+                                                    <div onClick={toggleCatalog} className="flex flex-row cursor-pointer items-center gap-1 group relative" >
+                                                        <p>Catalog</p>
+                                                        <span><IoIosArrowDropdownCircle className="text-richblack-100" /></span>
+                                                    </div>
+                                                    {/* { */}
+                                                    {/* catalogItems && ( */}
+                                                    <div
+                                                        className={`${catalogItems ? "opacity-100 max-h-screen" : "opacity-0 max-h-0"
+                                                            } transition-all duration-500 ease-in-out overflow-hidden flex flex-col items-center text-base gap-4 mt-3`}
+                                                    >
+                                                        {
+                                                            subLinks.length > 0 && (
+                                                                subLinks.map((value, index) => (
+                                                                    <NavLink
+                                                                        onClick={toggleMenu}
+                                                                        key={index}
+                                                                        to={`/catalog/${encodeURIComponent(value.name)}`}
+                                                                        className="hover:text-richblack-300 duration-300"
+                                                                    >
+                                                                        {value.name}
+                                                                    </NavLink>
+                                                                ))
+                                                            )
+                                                        }
+                                                    </div>
+                                                    {/* ) */}
+                                                    {/* } */}
+
+                                                </>
+                                            ) :
+                                                (
+                                                    <NavLink onClick={toggleMenu} to={value?.path} className="hover:text-richblack-100 duration-300">
+                                                        <p className="" > {value.title}</p>
+                                                    </NavLink>
+                                                )
+                                        }
+
                                     </li>
                                 ))}
                                 {

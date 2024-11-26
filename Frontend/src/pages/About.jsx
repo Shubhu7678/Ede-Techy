@@ -24,13 +24,13 @@ const About = () => {
                         creating a brighter future by offering cutting-edge courses leveraging emerging technologies,
                         and nurturing a vibrant learning community.
                     </p>
-                    <div className="hidden md:block md:h-[70px] lg:h-[150px] ">
+                    <div className="hidden md:block md:h-[150px] lg:h-[150px] ">
 
                     </div>
-                    <div className="w-[90%] md:w-full md:absolute md:bottom-[-20%] md:translate-y-[-50%] flex flex-col md:flex-row gap-3 flex-wrap" >
-                        <img className="" src={BannerImage1} alt="" />
-                        <img src={BannerImage2} alt="" />
-                        <img src={BannerImage3} alt="" />
+                    <div className="w-[90%] md:w-full md:absolute md:left-[60%] md:bottom-[-20%] md:translate-x-[-50%] md:translate-y-[-50%] flex flex-col md:flex-row gap-3" >
+                        <img className="md:w-[350px]" src={BannerImage1} alt="" />
+                        <img className="hidden md:block md:w-[350px]" src={BannerImage2} alt="" />
+                        <img className="hidden lg:block md:w-[350px]" src={BannerImage3} alt="" />
                     </div>
                 </div>
             </section>

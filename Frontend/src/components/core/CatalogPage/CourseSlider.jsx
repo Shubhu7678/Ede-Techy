@@ -8,7 +8,7 @@ import CourseCard from './CourseCard';
 
 const CourseSlider = ({Courses}) => {
   return (
-    <div>
+    <div className="w-[90%] md:w-full">
       { 
         Courses?.length ?
           (<Swiper

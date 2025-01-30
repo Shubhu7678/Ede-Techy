@@ -59,7 +59,8 @@ const capturePayment = async (req, res) => {
         merchantTransactionId: orderId,
         merchantUserId: userId,
         amount: totalAmount * 100, // converting to paise
-        redirectUrl: `http://localhost:3000/payment/verify/${orderId}?courses=${courses.join(',')}`,
+        // redirectUrl: `http://localhost:3000/payment/verify/${orderId}?courses=${courses.join(',')}`,
+        redirectUrl: `https://ede-techy.vercel.app/payment/verify/${orderId}?courses=${courses.join(',')}`,
         redirectMode: "REDIRECT",
         mobileNumber: "9999999999",
         paymentInstrument: {

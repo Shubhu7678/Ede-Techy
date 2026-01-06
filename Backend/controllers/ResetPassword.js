@@ -40,7 +40,7 @@ const resetPasswordToken = async (req, res) => {
         //create url
         // console.log(updateDetails);
 
-        const url = `http://localhost:3000/change-password/${token}`;
+        const url = `https://ede-techy.vercel.app/change-password/${token}`;
 
         //Send email
 

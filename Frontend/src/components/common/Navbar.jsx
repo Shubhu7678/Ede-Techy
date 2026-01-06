@@ -28,7 +28,7 @@ const Navbar = () => {
         try {
 
             const result = await apiConnector('GET', categories.CATEGORIES_API);
-            setSubLinks(result.data.allCategories);
+            setSubLinks(result?.data?.allCategories);
 
         } catch (err) {
 
@@ -86,7 +86,7 @@ const Navbar = () => {
                                           bg-richblack-5 text-richblack-900 opacity-0 transition-all duration-200 
                                             group-hover:visible hover:visible hover:flex z-10 hover:opacity-100 group-hover-flex group-hover:opacity-100 w-[230px] p-2">
                                             {
-                                                subLinks.length > 0 ? (
+                                                subLinks?.length > 0 ? (
 
                                                     subLinks.map((value, index) => (
 

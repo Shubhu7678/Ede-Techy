@@ -66,35 +66,22 @@ const PublishCourse = () => {
     }, [])
 
     return (
-        <div className="bg-richblack-800 border-[1px] mt-5 rounded-md py-6 pl-12 pr-6 border-richblack-800">
-            <p className="text-xl font-mono">Publish Course </p>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="text-white mt-3">
-                    <label htmlFor="public" className="flex gap-2 items-center">
-                        <input
-                            type="checkbox"
-                            name="public"
-                            id="public"
-                            {
-                            ...register('public')
-                            }
-                            className="w-4 h-4 rounded-md"
-                        />
-                        <span>Make Course Public</span>
-                    </label>
-                </div>
-                <div className="flex gap-2 justify-end mt-10">
-                    <button
-                        disabled={loading}
-                        className="bg-richblack-900 text-yellow-50 px-6 py-2 rounded-md"
-                        type='button'
-                        onClick={() => dispatch(setStep(2))}
-                    >Back</button>
-                    <button
-                        disabled={loading}
-                        className="bg-yellow-50 text-richblack-800 px-6 py-2 rounded-md"
-                        type='submit'
-                    >Save Changes</button>
+        <div className="rounded-3xl border border-white/10 bg-richblack-800/80 p-6 text-richblack-5 md:p-8">
+            <p className="font-display text-3xl font-semibold">Publish course</p>
+            <p className="mt-1 text-sm font-light text-richblack-200">Choose whether students can find and buy your course right now.</p>
+            <form onSubmit={handleSubmit(onSubmit)} className="mt-6">
+                <label htmlFor="public" className="flex cursor-pointer items-start gap-4 rounded-2xl border border-white/10 bg-white/[0.02] p-5 transition-colors hover:border-white/30">
+                    <input type="checkbox" id="public" className="mt-1 h-5 w-5 accent-white" {...register('public')} />
+                    <span>
+                        <span className="block font-medium text-richblack-5">Make this course public</span>
+                        <span className="mt-1 block text-sm font-light text-richblack-200">Public courses appear in the catalog. Leave it unchecked to keep it as a draft.</span>
+                    </span>
+                </label>
+                <div className="mt-8 flex justify-end gap-3 border-t hairline pt-6">
+                    <button disabled={loading} className="btn-ghost rounded-full px-6 py-3 text-sm font-medium" type="button" onClick={() => dispatch(setStep(2))}>Back</button>
+                    <button disabled={loading} className="btn-gold rounded-full px-7 py-3 text-sm font-semibold disabled:opacity-60" type="submit">
+                        {loading ? "Saving..." : "Save changes"}
+                    </button>
                 </div>
             </form>
         </div>

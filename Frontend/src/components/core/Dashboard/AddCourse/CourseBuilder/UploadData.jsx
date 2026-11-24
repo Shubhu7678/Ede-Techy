@@ -1,8 +1,9 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import ReactPlayer from 'react-player'
+import { LuUploadCloud } from 'react-icons/lu';
 
-const UploadData = ({ label, name, register, errors, setValue, video = false, viewData=false, editData=false }) => {
+const UploadData = ({ label, name, register, errors, setValue, video = false, viewData=false, editData=false, presetFile }) => {
     const handleRef = useRef(null);
     const [image, setImage] = useState(video ? (viewData ? viewData : editData ? editData : null) : null);
     const { editCourse, course } = useSelector((state) => state.course);
@@ -39,6 +40,15 @@ const UploadData = ({ label, name, register, errors, setValue, video = false, vi
 
     }, []);
 
+    // a file handed in by the parent (e.g. the generated sample video)
+    useEffect(() => {
+        if (!presetFile?.file) return;
+        const url = URL.createObjectURL(presetFile.file);
+        setImage(url);
+        setSelectedFile(presetFile.file);
+        return () => URL.revokeObjectURL(url);
+    }, [presetFile?.version])
+
     useEffect(() => {
 
         setValue(name, selectedFile);
@@ -46,84 +56,40 @@ const UploadData = ({ label, name, register, errors, setValue, video = false, vi
     }, [selectedFile,setValue])
 
     return (
-        <div className="flex flex-col gap-1">
-            <label htmlFor={name}>{label} <sup className="text-pink-200">*</sup></label>
-            <div className="bg-richblack-700 w-full p-4 min-h-[250px] flex items-center justify-center cursor-pointer">
-                {
-                    image ?
-                        (
-                            <div className="flex flex-col items-center gap-2 w-full">
-                                {!video ? (<img className="h-full w-full object-cover" src={image} alt="" />) : (
-                                     
-                                    <ReactPlayer url={image} width="100%" height="100%" controls={true} />
-
-                                )}
-
-                                <button
-                                    type="button"
-                                    className="bg-richblack-900 w-fit px-3 py-2 text-sm text-richblack-5 rounded-md text-center"
-                                    onClick={() => (setImage(null))}
-                                >Remove</button>
-                            </div>
-                        ) :
-                        (
-                            <div
-                                className="flex flex-col w-full items-center"
-                                role="presentation"
-                                tabIndex={0}
-                            >
-                                <input
-                                    type="file"
-                                    className="hidden"
-                                    ref={handleRef} // Assigning ref to the input
-                                    id={name}
-                                    name={name}
-                                    accept="image/png, image/jpeg, image/jpg , video/*"
-                                    onChange={handleOnChange}
-                                    tabIndex={-1}
-                                // {...register(name, { required: true })} // Using register from react-hook-form
-                                />
-                                <div className="grid aspect-square w-14 place-items-center rounded-full bg-pure-greys-800">
-                                    <button
-                                        type="button"
-                                        onClick={handleAddImage} // Triggering the file input click
-                                    >
-                                        <svg
-                                            stroke="currentColor"
-                                            fill="none"
-                                            strokeWidth="2"
-                                            viewBox="0 0 24 24"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            className="text-2xl text-yellow-50"
-                                            height="1em"
-                                            width="1em"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <polyline points="16 16 12 12 8 16"></polyline>
-                                            <line x1="12" y1="12" x2="12" y2="21"></line>
-                                            <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"></path>
-                                            <polyline points="16 16 12 12 8 16"></polyline>
-                                        </svg>
-                                    </button>
-                                </div>
-                                <p className="mt-2 max-w-[200px] text-center text-sm text-richblack-200">
-                                    Drag and drop an image, or click to{" "}
-                                    <span className="font-semibold text-yellow-50">Browse</span> a file
-                                </p>
-                                <ul className="mt-10 flex list-disc justify-between space-x-12 text-center text-xs text-richblack-200">
-                                    <li>Aspect ratio 16:9</li>
-                                    <li>Recommended size 1024x576</li>
-                                </ul>
-                            </div>
-                        )
-                }
-            </div>
-            {errors[name] && (
-                <span className="text-pink-200">
-                    Course Image is required**
-                </span>
+        <div>
+            <label htmlFor={name} className="mb-2 block text-[13px] font-medium tracking-wide text-richblack-25">
+                {label} <sup className="text-pink-200">*</sup>
+            </label>
+            {image ? (
+                <div className="overflow-hidden rounded-2xl border border-white/10 bg-black">
+                    {!video
+                        ? <img className="aspect-video w-full object-cover" src={image} alt="" />
+                        : <div className="aspect-video"><ReactPlayer url={image} width="100%" height="100%" controls={true} /></div>}
+                    {!viewData && (
+                        <div className="flex justify-end border-t hairline bg-richblack-800 p-2.5">
+                            <button type="button" onClick={() => { setImage(null); setSelectedFile(null); }}
+                                className="rounded-full px-4 py-1.5 text-xs font-medium text-richblack-100 transition-colors hover:text-pink-100">
+                                Remove video
+                            </button>
+                        </div>
+                    )}
+                </div>
+            ) : (
+                <div role="button" tabIndex={0} onClick={handleAddImage}
+                    onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleAddImage()}
+                    className="flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-white/15 bg-white/[0.02] px-6 py-10 text-center transition-colors hover:border-white/40">
+                    <input type="file" className="hidden" ref={handleRef} id={name} name={name}
+                        accept={video ? "video/*" : "image/png,image/jpeg,image/jpg"} onChange={handleOnChange} tabIndex={-1} />
+                    <span className="flex h-14 w-14 items-center justify-center rounded-full border border-white/15 bg-white/[0.06] text-2xl text-richblack-5">
+                        <LuUploadCloud />
+                    </span>
+                    <p className="mt-4 text-[15px] text-richblack-100">
+                        Click to <span className="font-semibold text-richblack-5 underline underline-offset-4">browse</span> {video ? "a video" : "an image"}
+                    </p>
+                    <p className="mt-1 text-xs text-richblack-300">{video ? "MP4 or WebM recommended" : "16:9 · 1024×576"}</p>
+                </div>
             )}
+            {errors[name] && <span className="mt-1.5 block text-xs text-pink-200">{video ? "A video is required" : "An image is required"}</span>}
         </div>
     );
 };

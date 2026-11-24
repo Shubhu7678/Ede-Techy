@@ -2,11 +2,155 @@
 @tailwind components;
 @tailwind utilities;
 
-html, body{
-
-    overflow-x:hidden;
+:root {
+    --gold: #E8C468;
+    --gold-deep: #BC973F;
+    --ink: #0A0A0A;
 }
-.homepage_bg{
 
-    background : url('./assets/Images/bghome.svg');
+html, body {
+    overflow-x: clip; /* clip (not hidden) so position: sticky keeps working */
+    background: var(--ink);
+    color: #F4F1EA;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
 }
+
+/* Lenis smooth scroll */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+::selection { background: var(--gold); color: #0A0A0A; }
+
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #0A0A0A; }
+::-webkit-scrollbar-thumb { background: #333230; border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gold-deep); }
+
+.homepage_bg {
+    background: url('./assets/Images/bghome.svg');
+}
+
+@layer components {
+    .gold-text {
+        background: linear-gradient(100deg, #BC973F 0%, #F6DD94 38%, #E8C468 55%, #BC973F 100%);
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        animation: goldshift 6s linear infinite;
+    }
+
+    .glass {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(232, 196, 104, 0.14);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+    }
+
+    .hairline { border-color: rgba(232, 196, 104, 0.16); }
+
+    .eyebrow {
+        font-size: 0.72rem;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: var(--gold);
+        font-weight: 500;
+    }
+
+    .section-title {
+        font-family: "Cormorant Garamond", Georgia, serif;
+        font-weight: 600;
+        line-height: 1.05;
+        letter-spacing: -0.01em;
+    }
+
+    .btn-gold {
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(180deg, #F0CF7A, #D4AF4F);
+        color: #0A0A0A;
+        box-shadow: 0 0 0 1px rgba(255, 243, 201, 0.35) inset, 0 10px 30px -10px rgba(232, 196, 104, 0.55);
+        transition: transform .35s cubic-bezier(.2, .8, .2, 1), box-shadow .35s;
+    }
+    .btn-gold::after {
+        content: "";
+        position: absolute; inset: 0;
+        background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, .55) 50%, transparent 70%);
+        transform: translateX(-120%);
+        transition: transform .7s cubic-bezier(.2, .8, .2, 1);
+    }
+    .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 0 0 1px rgba(255, 243, 201, 0.5) inset, 0 16px 40px -10px rgba(232, 196, 104, 0.75); }
+    .btn-gold:hover::after { transform: translateX(120%); }
+
+    .btn-ghost {
+        border: 1px solid rgba(232, 196, 104, 0.35);
+        color: #F4F1EA;
+        background: rgba(255, 255, 255, 0.02);
+        transition: all .35s cubic-bezier(.2, .8, .2, 1);
+    }
+    .btn-ghost:hover { background: rgba(232, 196, 104, 0.1); border-color: var(--gold); transform: translateY(-2px); }
+
+    .nav-link { position: relative; }
+    .nav-link::after {
+        content: ""; position: absolute; left: 0; right: 100%; bottom: -6px; height: 1px;
+        background: var(--gold); transition: right .35s cubic-bezier(.2, .8, .2, 1);
+    }
+    .nav-link:hover::after, .nav-link.active::after { right: 0; }
+}
+
+/* film grain for depth */
+.grain::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 60; opacity: .05;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@keyframes goldshift { to { background-position: 200% center; } }
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.marquee-track { animation: marquee 38s linear infinite; width: max-content; }
+
+[data-reveal] { will-change: transform, opacity; }
+
+@media (prefers-reduced-motion: reduce) {
+    .gold-text, .marquee-track { animation: none; }
+}
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+@keyframes cardIn { from { opacity: 0; transform: translateY(28px) scale(.97); } to { opacity: 1; transform: none; } }
+.card-in { animation: cardIn .8s cubic-bezier(.2, .8, .2, 1) backwards; }
+
+.review-swiper .swiper-pagination-bullet { background: #615F5B; opacity: 1; width: 8px; height: 8px; transition: all .3s; }
+.review-swiper .swiper-pagination-bullet-active { background: var(--gold); width: 26px; border-radius: 8px; }
+
+/* loading spinner (used by several pages) */
+.spinner {
+    width: 44px; height: 44px; border-radius: 50%;
+    border: 3px solid rgba(232, 196, 104, 0.18);
+    border-top-color: var(--gold);
+    animation: spin .9s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---- dashboard app shell: consistent form controls for the legacy forms (course builder etc.) ---- */
+.dash input:not([type=checkbox]):not([type=radio]):not([type=file]):not([type=range]):not(.raw),
+.dash textarea:not(.raw),
+.dash select:not(.raw) {
+    background: rgba(255, 255, 255, 0.03) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 0.75rem !important;
+    color: #F4F1EA !important;
+    box-shadow: none !important;
+    outline: none;
+    transition: border-color .2s;
+}
+.dash input:not(.raw):focus, .dash textarea:not(.raw):focus, .dash select:not(.raw):focus { border-color: rgba(232, 196, 104, 0.7) !important; }
+.dash ::placeholder { color: #777570; }
+.dash select option { background: #161615; color: #F4F1EA; }
+.dash button[class*="bg-yellow-50"], .dash button[class*="bg-yellow-100"], .dash button[class*="bg-yellow-200"] {
+    border-radius: 9999px !important; font-weight: 600; color: #0A0A0A;
+}
+.dash button[class*="bg-richblack-900"], .dash button[class*="bg-richblack-700"]:not([role]) { border-radius: 9999px; }
+.dash label { color: #C7C3B8; }

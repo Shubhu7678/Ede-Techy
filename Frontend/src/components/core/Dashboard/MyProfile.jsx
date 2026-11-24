@@ -1,110 +1,71 @@
 import React from 'react'
-import IconButton from '../../common/IconButton';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { FaRegEdit } from "react-icons/fa";
+
+const EditBtn = ({ onClick }) => (
+    <button onClick={onClick} className="btn-ghost flex items-center gap-2 rounded-full px-5 py-2 text-sm font-medium">
+        Edit <FaRegEdit className="text-yellow-50" />
+    </button>
+);
+
+const Field = ({ label, value }) => (
+    <div>
+        <p className="text-xs uppercase tracking-[0.18em] text-richblack-300">{label}</p>
+        <p className="mt-1 text-richblack-5">{value}</p>
+    </div>
+);
 
 const MyProfile = () => {
 
     const { user } = useSelector((state) => state.profile);
     const navigate = useNavigate();
+    const edit = () => navigate('/dashboard/settings');
+    const card = "rounded-3xl border border-white/10 bg-richblack-800/80 p-6 md:p-8";
 
     return (
-        <div className="text-white flex justify-center w-full">
-            <div className="w-[70%] flex flex-col gap-7">
-                <h1 className="text-3xl font-medium mb-2">My Profile</h1>
-                {/* section 1  */}
-                <div className="flex flex-row justify-between p-4 rounded-md bg-richblack-800 ">
-                    <div className="flex flex-row gap-4 items-center">
-                        <img className="aspect-square w-[80px] rounded-full object-cover" src={user?.image} alt={`profile-${user?.firstName}`} />
-                        <div>
-                            <h1 className="text-xl font-semibold mb-1">
-                                {user?.firstName + " " + user?.lastName}
-                            </h1>
-                            <p className="font-regular text-sm text-richblack-100" >{user?.email}</p>
-                        </div>
-                    </div>
+        <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 text-richblack-5">
+            <div>
+                <p className="eyebrow mb-3">Dashboard</p>
+                <h1 className="section-title text-5xl">My profile</h1>
+            </div>
+
+            <div className={`${card} flex flex-col items-start justify-between gap-5 sm:flex-row sm:items-center`}>
+                <div className="flex items-center gap-5">
+                    {user?.image
+                        ? <img className="aspect-square w-20 rounded-full object-cover ring-2 ring-yellow-50/60" src={user.image} alt={`profile-${user?.firstName}`} />
+                        : <span className="flex aspect-square w-20 items-center justify-center rounded-full bg-gradient-to-br from-yellow-25 to-yellow-200 font-display text-3xl font-semibold text-richblack-900 ring-2 ring-yellow-50/60">{`${user?.firstName?.[0] ?? ""}${user?.lastName?.[0] ?? ""}`.toUpperCase()}</span>}
                     <div>
-                        <IconButton
-                            onclick={() => (navigate('/dashboard/settings'))}
-                            customClasses={`text-richblack-800 bg-yellow-50 rounded-md px-3 py-1`}
-                        >
-                            <div className="flex flex-row items-center gap-2">
-                                <p className="font-regular text-sm" >Edit</p>
-                                <FaRegEdit />
-                            </div>
-                        </IconButton>
+                        <h2 className="font-display text-3xl font-semibold">{user?.firstName + " " + user?.lastName}</h2>
+                        <p className="text-sm font-light text-richblack-200">{user?.email}</p>
+                        <span className="mt-2 inline-block rounded-full border border-yellow-50/30 bg-yellow-50/10 px-3 py-0.5 text-xs text-yellow-25">{user?.accountType}</span>
                     </div>
                 </div>
+                <EditBtn onClick={edit} />
+            </div>
 
-                {/* section 2  */}
-                <div className="p-4 bg-richblack-800 rounded-md flex flex-col gap-3 ">
-                    <div className="flex flex-row justify-between">
-                        <p>About</p>
-                        <IconButton
-                            onclick={() => (navigate('/dashboard/settings'))}
-                            customClasses={`text-richblack-800 bg-yellow-50 rounded-md px-3 py-1`}
-                        >
-                            <div className="flex flex-row items-center gap-2">
-                                <p className="font-regular text-sm" >Edit</p>
-                                <FaRegEdit />
-                            </div>
-                        </IconButton>
-                    </div>
-                    <p className="w-[90%] text-richblack-100">
-                        {
-                            user?.additionalDetails?.about ? (user?.additionalDetails?.about)
-                                :
-                                ("Write Something About Yourself")
-                        }
-                    </p>
+            <div className={`${card} flex flex-col gap-3`}>
+                <div className="flex items-center justify-between">
+                    <p className="font-display text-2xl font-semibold">About</p>
+                    <EditBtn onClick={edit} />
                 </div>
+                <p className="font-light leading-relaxed text-richblack-100">
+                    {user?.additionalDetails?.about ? user.additionalDetails.about : "Write something about yourself"}
+                </p>
+            </div>
 
-                {/* section 3 */}
-
-                <div className="p-4 bg-richblack-800 rounded-md flex flex-col gap-3">
-                    <div className="flex flex-row justify-between">
-                        <p className="text-xl font-regular">Personal Details</p>
-                        <IconButton
-                            onclick={() => (navigate('/dashboard/settings'))}
-                            customClasses={`text-richblack-800 bg-yellow-50 rounded-md px-3 py-1`}
-                        >
-                            <div className="flex flex-row items-center gap-2">
-                                <p className="font-regular text-sm">Edit</p>
-                                <FaRegEdit />
-                            </div>
-                        </IconButton>
-                    </div>
-                    <div className="w-[70%] flex justify-between">
-                        <div>
-                            <div className="flex flex-col gap-1">
-                                <p className="text-richblack-100">First Name</p>
-                                <p>{user?.firstName}</p>
-                            </div>
-                            <div className="flex flex-col gap-1">
-                                <p className="text-richblack-100">Email</p>
-                                <p>{user?.email}</p>
-                            </div>
-                            <div className="flex flex-col gap-1">
-                                <p className="text-richblack-100">Contact</p>
-                                <p>{user?.additionalDetails?.contact ?? "Add Contact Number"}</p>
-                            </div>
-                        </div>
-                        <div>
-                            <div className="flex flex-col gap-1">
-                                <p className="text-richblack-100">Last Name</p>
-                                <p>{user?.lastName}</p>
-                            </div>
-                            <div className="flex flex-col gap-1">
-                                <p className="text-richblack-100">Gender</p>
-                                <p>{user?.additionalDetails?.gender ?? "Add gender"}</p>
-                            </div>
-                            <div className="flex flex-col gap-1">
-                                <p className="text-richblack-100">Date of Birth</p>
-                                <p>{user?.additionalDetails?.dateOfBirth ?? "Add Date of Birth"}</p>
-                            </div>
-                        </div>
-                    </div>
+            <div className={`${card} flex flex-col gap-6`}>
+                <div className="flex items-center justify-between">
+                    <p className="font-display text-2xl font-semibold">Personal details</p>
+                    <EditBtn onClick={edit} />
+                </div>
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                    <Field label="First name" value={user?.firstName} />
+                    <Field label="Last name" value={user?.lastName} />
+                    <Field label="Email" value={user?.email} />
+                    <Field label="Contact" value={user?.additionalDetails?.contact ?? "Add contact number"} />
+                    <Field label="Gender" value={user?.additionalDetails?.gender ?? "Add gender"} />
+                    <Field label="Date of birth" value={user?.additionalDetails?.dateOfBirth ?? "Add date of birth"} />
                 </div>
             </div>
         </div>

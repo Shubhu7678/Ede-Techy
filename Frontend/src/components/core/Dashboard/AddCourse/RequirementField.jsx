@@ -1,104 +1,71 @@
 import React, { useEffect, useState } from 'react'
-import { IoIosAddCircleOutline } from "react-icons/io";
+import { LuPlus, LuX } from "react-icons/lu";
 import { useSelector } from 'react-redux';
 
-const RequirementField = ({ label, name, errors, register, setValue, getValues }) => {
+// `preset` ({ version, items }) lets the parent replace the list (used by templates).
+// `suggestions` are one-click chips under the input.
+const RequirementField = ({ label, name, errors, register, setValue, suggestions = [], preset }) => {
 
     const [requirement, setRequirement] = useState("");
     const [requirementList, setRequirementList] = useState([]);
     const { course, editCourse } = useSelector((state) => state.course);
 
-    const handleAddRequirement = () => {
-
-        if (requirement) {
-
-            setRequirementList([...requirementList, requirement]);
-            setRequirement("");
-        }
+    const add = (value) => {
+        const v = value.trim();
+        if (v && !requirementList.includes(v)) setRequirementList([...requirementList, v]);
     }
 
-    const handleRemoveRequirement = (index) => {
-
-        const newRequirementList = [...requirementList];
-        const updatedList = newRequirementList.filter((item, i) => i !== index);
-        setRequirementList(updatedList);
-
-    }
+    const handleAddRequirement = () => { add(requirement); setRequirement(""); }
+    const handleRemoveRequirement = (index) => setRequirementList(requirementList.filter((_, i) => i !== index));
 
     useEffect(() => {
-
         register(name, { required: true });
-        if (editCourse) { 
-
-            setRequirementList(course?.instructions);
-        }
-
+        if (editCourse) setRequirementList(course?.instructions || []);
     }, [])
 
-    useEffect(() => {
+    useEffect(() => { setValue(name, requirementList, { shouldValidate: requirementList.length > 0 }); }, [requirementList])
+    useEffect(() => { if (preset?.version) setRequirementList(preset.items); }, [preset?.version])
 
-        setValue(name, requirementList);
-
-    }, [requirementList])
+    const remaining = suggestions.filter((s) => !requirementList.includes(s));
 
     return (
-        <div className="flex flex-col gap-1">
-            <label htmlFor={name}>{label}</label>
-            <input
-                type="text"
-                id={name}
-                name={name}
-                value={requirement}
-                onChange={(e) => setRequirement(e.target.value)}
-                className="w-full mt-1 p-2 rounded-md bg-richblack-700 border-richblack-900"
-                style={{
-                    boxShadow: "inset 0px -1px 0px rgba(255, 255, 255, 0.18)",
-                }}
-            />
-            <button
-                type="button"
-                onClick={handleAddRequirement}
-                className="px-3 py-2 text-yellow-50 w-fit flex flex-row items-center gap-1 rounded-md text-base font-medium bg-richblack-900"
-            >
-                <span>Add</span>
-                <IoIosAddCircleOutline className="text-base" />
-            </button>
-            { 
-                errors[name] && (
-                    <span className="text-pink-200" >Requirement Field is required**</span>
-                )
-            }
-            <div>
-                {
-                    requirementList.length > 0 && (
-                        <ul className="text-richblack-100 text-sm mt-1">
-                            {
-                                requirementList.map((data, index) => (
-                                    
-                                    <li
-                                        key={index}
-                                        className="flex flex-row items-center gap-1 mb-1"
-                                    >
-                                        <span>
-                                            {data}
-                                            </span>
-                                        
-                                            <button
-                                                className="text-xs text-white bg-yellow-300 px-2 py-1 rounded-md"
-                                                type="button"
-                                                onClick={() => handleRemoveRequirement(index)}
-                                            >
-                                                Remove
-                                            </button>
-                                        
-                                        </li>
-                                    
-                                ))
-                            }
-                        </ul>
-                    )
-                }
+        <div>
+            <label htmlFor={name} className="mb-2 block text-[13px] font-medium tracking-wide text-richblack-25">
+                {label} <sup className="text-pink-200">*</sup>
+            </label>
+            <div className="flex gap-3">
+                <input type="text" id={name} value={requirement} placeholder="e.g. A laptop with internet access"
+                    onChange={(e) => setRequirement(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleAddRequirement(); } }}
+                    className="min-w-0 flex-1 px-4 py-3.5 text-[15px]" />
+                <button type="button" onClick={handleAddRequirement}
+                    className="btn-ghost flex shrink-0 items-center gap-2 rounded-full px-5 text-sm font-medium">
+                    <LuPlus /> Add
+                </button>
             </div>
+            {remaining.length > 0 && (
+                <div className="mt-3 flex flex-wrap items-center gap-2">
+                    <span className="text-xs text-richblack-300">Suggestions:</span>
+                    {remaining.map((s) => (
+                        <button type="button" key={s} onClick={() => add(s)}
+                            className="flex items-center gap-1 rounded-full border border-white/15 px-3 py-1 text-xs text-richblack-100 transition-colors hover:border-white/40 hover:text-richblack-5">
+                            <LuPlus /> {s}
+                        </button>
+                    ))}
+                </div>
+            )}
+            {errors[name] && <span className="mt-2 block text-xs text-pink-200">Add at least one requirement</span>}
+            {requirementList.length > 0 && (
+                <ul className="mt-3 flex flex-col gap-2">
+                    {requirementList.map((data, index) => (
+                        <li key={index} className="flex items-center justify-between gap-3 rounded-xl border hairline bg-white/[0.02] px-4 py-2.5 text-sm text-richblack-25">
+                            <span className="flex items-center gap-3"><span className="h-1.5 w-1.5 shrink-0 rounded-full bg-richblack-300" />{data}</span>
+                            <button type="button" onClick={() => handleRemoveRequirement(index)} aria-label="Remove requirement"
+                                className="text-richblack-300 transition-colors hover:text-pink-100"><LuX /></button>
+                        </li>
+                    ))}
+                </ul>
+            )}
         </div>
     )
 }

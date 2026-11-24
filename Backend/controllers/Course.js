@@ -45,7 +45,7 @@ const createCourse = async (req, res) => {
             !status
         ) {
 
-            res.status(401).json({
+            return res.status(401).json({
 
                 success: false,
                 message: "All fields are required",
@@ -75,7 +75,7 @@ const createCourse = async (req, res) => {
 
         if (!categoryDetails) {
 
-            res.status(404).json({
+            return res.status(404).json({
 
                 success: false,
                 message: "Category Details not found",

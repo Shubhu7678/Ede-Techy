@@ -9,54 +9,27 @@ export default function RenderCartCourses() {
     const { cart } = useSelector((state) => state.cart)
     const dispatch = useDispatch()
     return (
-        <div className="flex flex-1 flex-col">
-            {cart.map((course, indx) => (
-                <div
-                    key={course._id}
-                    className={`flex w-full flex-wrap items-start justify-between gap-6 ${indx !== cart.length - 1 && "border-b border-b-richblack-400 pb-6"
-                        } ${indx !== 0 && "mt-6"} `}
-                >
-                    <div className="flex flex-1 flex-col gap-4 xl:flex-row">
-                        <img
-                            src={course?.thumbnail}
-                            alt={course?.courseName}
-                            className="h-[148px] w-[220px] rounded-lg object-cover"
-                        />
-                        <div className="flex flex-col space-y-1">
-                            <p className="text-lg font-medium text-richblack-5">
-                                {course?.courseName}
-                            </p>
-                            <p className="text-sm text-richblack-300">
-                                {course?.category?.name}
-                            </p>
-                            <div className="flex items-center gap-2">
-                                <span className="text-yellow-5">{GetAvgRating(course?.ratingAndReviews)}</span>
-                                <ReactStars
-                                    count={5}
-                                    value={course?.ratingAndReviews?.length}
-                                    size={20}
-                                    edit={false}
-                                    activeColor="#ffd700"
-                                    emptyIcon={<FaStar />}
-                                    fullIcon={<FaStar />}
-                                />
-                                <span className="text-richblack-400">
-                                    {course?.ratingAndReviews?.length} Ratings
-                                </span>
-                            </div>
+        <div className="flex flex-1 flex-col gap-4">
+            {cart.map((course) => (
+                <div key={course._id}
+                    className="flex flex-col gap-5 rounded-3xl border border-white/10 bg-richblack-800/80 p-5 sm:flex-row">
+                    <img src={course?.thumbnail} alt={course?.courseName} className="aspect-video w-full rounded-2xl object-cover sm:h-28 sm:w-48" />
+                    <div className="min-w-0 flex-1">
+                        <p className="font-display text-2xl font-semibold text-richblack-5">{course?.courseName}</p>
+                        <p className="mt-1 text-sm text-richblack-200">{course?.category?.name}</p>
+                        <div className="mt-2 flex items-center gap-2 text-sm">
+                            <span className="text-yellow-50">{GetAvgRating(course?.ratingAndReviews)}</span>
+                            <ReactStars count={5} value={GetAvgRating(course?.ratingAndReviews)} size={18} edit={false}
+                                activeColor="#E8C468" emptyIcon={<FaStar />} fullIcon={<FaStar />} />
+                            <span className="text-richblack-300">({course?.ratingAndReviews?.length})</span>
                         </div>
                     </div>
-                    <div className="flex flex-col items-end space-y-2">
-                        <button
-                            onClick={() => dispatch(removeFromCart(course._id))}
-                            className="flex items-center gap-x-1 rounded-md border border-richblack-600 bg-richblack-700 py-3 px-[12px] text-pink-200"
-                        >
-                            <RiDeleteBin6Line />
-                            <span>Remove</span>
+                    <div className="flex items-center justify-between gap-3 sm:flex-col sm:items-end">
+                        <p className="font-display text-3xl font-semibold gold-text">₹ {course?.price}</p>
+                        <button onClick={() => dispatch(removeFromCart(course._id))}
+                            className="flex items-center gap-2 rounded-full border border-pink-200/30 px-4 py-2 text-sm text-pink-100 transition-colors hover:bg-pink-200/10">
+                            <RiDeleteBin6Line /> Remove
                         </button>
-                        <p className="mb-6 text-3xl font-medium text-yellow-100">
-                            ₹ {course?.price}
-                        </p>
                     </div>
                 </div>
             ))}

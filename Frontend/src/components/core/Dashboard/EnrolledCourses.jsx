@@ -32,59 +32,45 @@ const EnrolledCourses = () => {
     }, [])
 
     return (
-        <div className="text-white">
-            <div className="text-3xl font-semibold">Enrolled Courses</div>
+        <div className="text-richblack-5">
+            <p className="eyebrow mb-3">Dashboard</p>
+            <h1 className="section-title text-5xl">Enrolled courses</h1>
             {
-                !enrolledCourses ?
-                    (
-                        <div>
-                            Loading...
-                        </div>
-                    ) :
-                    !enrolledCourses.length ?
-                        (
-                            <div>You haven't enrolled in any course yet.</div>
-                        ) :
-                        (
-                            <div className="my-8 text-richblack-5">
-                                <div className="flex rounded-t-lg bg-richblack-700">
-                                    <p className="w-[45%] px-5 py-3">Course Name</p>
-                                    <p className="w-1/4 px-2 py-3">Duration</p>
-                                    <p className="flex-1 px-2 py-3">Progress</p>
+                !enrolledCourses ? (
+                    <div className="mt-14 flex justify-center"><div className="spinner" /></div>
+                ) : !enrolledCourses.length ? (
+                    <div className="mt-10 rounded-3xl border border-dashed border-white/15 px-6 py-16 text-center">
+                        <p className="font-display text-3xl text-richblack-5">No courses yet</p>
+                        <p className="mt-2 text-sm font-light text-richblack-200">You haven't enrolled in any course yet. Explore the catalog to get started.</p>
+                    </div>
+                ) : (
+                    <div className="mt-10 flex flex-col gap-4">
+                        {enrolledCourses.map((course, index) => (
+                            <div
+                                key={index}
+                                onClick={() => navigate(`/view-course/${course?._id}/section/${course?.courseContent[0]?._id}/subSection/${course?.courseContent[0]?.subSection[0]?._id}`)}
+                                className="group flex cursor-pointer flex-col gap-5 rounded-3xl border border-white/10 bg-richblack-800/80 p-5 transition-all duration-500 hover:-translate-y-1 hover:border-yellow-50/40 sm:flex-row sm:items-center"
+                            >
+                                <img className="h-24 w-full rounded-2xl object-cover sm:w-40" src={course.thumbnail} alt="" />
+                                <div className="min-w-0 flex-1">
+                                    <p className="font-display text-2xl font-semibold">{course.courseName}</p>
+                                    <p className="mt-1 line-clamp-2 text-sm font-light text-richblack-200">{course.courseDescription}</p>
                                 </div>
-                                {
-                                    enrolledCourses.map((course, index) => (
-
-                                        <div
-                                            onClick={() =>
-                                            (
-                                                navigate(`/view-course/${course?._id}/section/${course?.courseContent[0]?._id}/subSection/${course?.courseContent[0]?.subSection[0]?._id}`)
-                                            )}
-                                            className="flex cursor-pointer items-center border border-richblack-700" key={index}
-                                        >
-                                            <div className="w-[45%] p-3 flex gap-3 items-center">
-                                                <img className="w-14 h-14 object-fit rounded-md" src={course.thumbnail} />
-                                                <div>
-                                                    <p>{course.courseName}</p>
-                                                    <p>{course.courseDescription}</p>
-                                                </div>
-                                            </div>
-                                            <div className="w-1/4">
-                                                {course?.totalDuration}
-                                            </div>
-                                            <div className="w-1/5 flex flex-col gap-2">
-                                                <p>Progress: {course?.progressPercentage || 0}</p>
-                                                <ProgressBar
-                                                    completed={course?.progressPercentage || 0}
-                                                    height='8px'
-                                                    isLabelVisible={false}
-                                                />
-                                            </div>
-                                        </div>
-                                    ))
-                                }
+                                <div className="text-sm text-richblack-200 sm:w-24">{course?.totalDuration}</div>
+                                <div className="flex w-full flex-col gap-2 sm:w-48">
+                                    <p className="text-xs text-richblack-200">Progress: <span className="text-yellow-25">{course?.progressPercentage || 0}%</span></p>
+                                    <ProgressBar
+                                        completed={course?.progressPercentage || 0}
+                                        height='8px'
+                                        isLabelVisible={false}
+                                        bgColor="#E8C468"
+                                        baseBgColor="rgba(255,255,255,0.1)"
+                                    />
+                                </div>
                             </div>
-                        )
+                        ))}
+                    </div>
+                )
             }
         </div>
     )

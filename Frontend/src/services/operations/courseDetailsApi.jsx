@@ -64,7 +64,7 @@ export const fetchCourseCategories = async () => {
 
 export const addCourseDetails = async (formData, token) => {
 
-    let result = [];
+    let result = null; // null = failed, so callers do not move on
 
     try {
 
@@ -81,13 +81,12 @@ export const addCourseDetails = async (formData, token) => {
         }
 
         result = response.data.data;
-        toast.success(response.data.message);
         return result;
 
     } catch (err) {
 
         console.log("Error in adding course details : ", err);
-        toast.error(err.response.data.message);
+        toast.error(err?.response?.data?.error ? `${err.response.data.message}: ${err.response.data.error}` : (err?.response?.data?.message || err.message || "Something went wrong"));
     }
 
     return result;
@@ -95,8 +94,7 @@ export const addCourseDetails = async (formData, token) => {
 
 export const updateCourseData = async (formData, token) => {
 
-    const toastId = toast.loading('Loading...');
-    let result = [];
+    let result = null; // null = failed, so callers do not move on
     try {
 
         const response = await apiConnector('POST', UPDATE_COURSE_API, formData,
@@ -111,7 +109,6 @@ export const updateCourseData = async (formData, token) => {
         }
 
         result = response.data.data;
-        toast.success(response.data.message);
 
     } catch (error) {
 
@@ -119,7 +116,6 @@ export const updateCourseData = async (formData, token) => {
         toast.error(error.response.data.message);
 
     }
-    toast.dismiss(toastId);
     return result;
 }
 
@@ -155,7 +151,6 @@ export const deleteCourse = async (courseId, token) => {
 
 export const getFullDetailsOfCourse = async (courseId) => { 
 
-    const toastId = toast.loading('Loading...');
     let result = [];
     try {
  
@@ -168,7 +163,6 @@ export const getFullDetailsOfCourse = async (courseId) => {
         }
         result = response.data.data;
         // console.log("Result : ", response);
-        toast.success(response.data.message);
 
 
     } catch (err) { 
@@ -177,7 +171,6 @@ export const getFullDetailsOfCourse = async (courseId) => {
         toast.error(err.response.data.message);
     }
 
-    toast.dismiss(toastId);
     return result;
 }
 
@@ -211,7 +204,7 @@ export const getCompletedLectures = async (courseId, token) => {
 
 export const createSection = async (formData, token) => {
 
-    let result = [];
+    let result = null; // null = failed, so callers do not move on
     try {
 
         const response = await apiConnector('POST', CREATE_SECTION_API, formData, {
@@ -225,7 +218,6 @@ export const createSection = async (formData, token) => {
         }
 
         result = response.data.data;
-        toast.success(response.data.message);
 
     } catch (error) {
 
@@ -238,7 +230,7 @@ export const createSection = async (formData, token) => {
 
 export const updateSection = async (formData, token) => {
 
-    let result = [];
+    let result = null; // null = failed, so callers do not move on
     try {
 
         const response = await apiConnector('POST', UPDATE_SECTION_API, formData,
@@ -253,7 +245,6 @@ export const updateSection = async (formData, token) => {
         }
 
         result = response.data.data;
-        toast.success(response.data.message);
 
     } catch (error) {
 
@@ -265,7 +256,7 @@ export const updateSection = async (formData, token) => {
 
 export const deleteSectionData = async ({ sectionId, courseId, token }) => {
 
-    let result = [];
+    let result = null; // null = failed, so callers do not move on
     try {
 
         const response = await apiConnector('POST', DELETE_SECTION_API, { sectionId, courseId },
@@ -280,12 +271,11 @@ export const deleteSectionData = async ({ sectionId, courseId, token }) => {
         }
 
         result = response.data.data;
-        toast.success(response.data.message);
 
     } catch (err) {
 
         console.log("Error : ", err);
-        toast.error(err.response.data.message);
+        toast.error(err?.response?.data?.error ? `${err.response.data.message}: ${err.response.data.error}` : (err?.response?.data?.message || err.message || "Something went wrong"));
 
     }
 
@@ -294,8 +284,7 @@ export const deleteSectionData = async ({ sectionId, courseId, token }) => {
 
 export const createSubSection = async (formData, token) => {
 
-    let result = [];
-    const toastId = toast.loading('Loading...');
+    let result = null; // null = failed, so callers do not move on
     try {
 
         const response = await apiConnector('POST', CREATE_SUB_SECTION_API, formData,
@@ -310,7 +299,6 @@ export const createSubSection = async (formData, token) => {
         }
 
         result = response?.data?.data;
-        toast.success(response.data.message);
 
     } catch (error) {
 
@@ -318,15 +306,13 @@ export const createSubSection = async (formData, token) => {
         toast.error(error.response.data.message);
     }
 
-    toast.dismiss(toastId);
     return result;
 
 }
 
 export const deleteSubSectionData = async ({ subSectionId, sectionId, courseId, token }) => {
 
-    const toastId = toast.loading("Loading...");
-    let result = [];
+    let result = null; // null = failed, so callers do not move on
 
     try {
 
@@ -342,21 +328,18 @@ export const deleteSubSectionData = async ({ subSectionId, sectionId, courseId, 
         }
 
         result = response.data.data;
-        toast.success(response.data.message);
     } catch (err) {
 
         console.log("Error :", err);
-        toast.error(err.response.data.message);
+        toast.error(err?.response?.data?.error ? `${err.response.data.message}: ${err.response.data.error}` : (err?.response?.data?.message || err.message || "Something went wrong"));
     }
 
-    toast.dismiss(toastId);
     return result;
 }
 
 export const updateSubSection = async (formData, token) => {
 
-    let result = [];
-    const toastId = toast.loading('Loading...');
+    let result = null; // null = failed, so callers do not move on
 
     try {
 
@@ -372,19 +355,17 @@ export const updateSubSection = async (formData, token) => {
         }
 
         result = response.data.data;
-        toast.success(response.data.message);
 
     } catch (err) {
 
         console.log("ERROR IN UPDATING SUBSECTION : ", err);
         if (err.response && err.response.data) {
-            toast.error(err.response.data.message);
+            toast.error(err?.response?.data?.error ? `${err.response.data.message}: ${err.response.data.error}` : (err?.response?.data?.message || err.message || "Something went wrong"));
         } else {
             toast.error("An error occurred while updating the subsection.");
         }
     }
 
-    toast.dismiss(toastId);
     return result;
 
 }
@@ -392,7 +373,6 @@ export const updateSubSection = async (formData, token) => {
 export const fetchInstructorCourses = async (token) => {
 
     let result = [];
-    const toastId = toast.loading('Loading');
     try {
 
         const response = await apiConnector('GET', GET_INSTRUCTOR_COURSES_API, {},
@@ -407,7 +387,6 @@ export const fetchInstructorCourses = async (token) => {
         }
 
         result = response.data.data;
-        toast.success(response.data.message);
 
     } catch (err) {
 
@@ -415,7 +394,6 @@ export const fetchInstructorCourses = async (token) => {
         toast.error(err.response.data.message);
     }
 
-    toast.dismiss(toastId);
     return result;
 }
 

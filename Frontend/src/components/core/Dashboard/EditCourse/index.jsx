@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import RenderSteps from '../AddCourse/RenderSteps';
+import PageHeader from '../PageHeader';
 import { setCourse, setEditCourse } from '../../../../slices/courseSlice';
 import { getFullDetailsOfCourse } from '../../../../services/operations/courseDetailsApi';
 
@@ -33,15 +34,18 @@ const EditCourse = () => {
     }, [])
 
     return (
-        <div className="text-white flex justify-center">
-            <div className="flex w-[70%]">
-                <div>
-                    <h1>Edit Course</h1>
-                    {
-                        course ? (<RenderSteps />) : (<p>Course Not Found</p>)
-                    }
-                </div>
-            </div>
+        <div className="text-richblack-5">
+            <PageHeader title="Edit course" subtitle="Update your course details, sections and lectures." />
+            {
+                loading ? (
+                    <div className="mt-14 flex justify-center"><div className="spinner" /></div>
+                ) : course ? (<RenderSteps />) : (
+                    <div className="rounded-3xl border border-dashed border-white/15 px-6 py-20 text-center">
+                        <p className="font-display text-3xl text-richblack-5">Course not found</p>
+                        <p className="mt-2 text-sm font-light text-richblack-200">It may have been deleted, or the link is wrong.</p>
+                    </div>
+                )
+            }
         </div>
     )
 }

@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { setCompletedLectures, updateCompletedLectures } from '../../../slices/viewCourseSlice';
 import ReactPlayer from 'react-player'
-import { FaCirclePlay } from "react-icons/fa6";
 import { markLectureAsComplete } from '../../../services/operations/courseDetailsApi';
 
 const VideoDetails = () => {
@@ -152,86 +151,62 @@ const VideoDetails = () => {
     setVideoSpecificDetails();
   }, [courseEntireData, courseSectionData, location.pathname])
 
+  const btnPrimary = "btn-gold rounded-full px-6 py-2.5 text-sm font-semibold disabled:opacity-60";
+  const btnGhost = "btn-ghost rounded-full px-6 py-2.5 text-sm font-medium disabled:opacity-60";
+  const completed = completedLectures?.completedVideos?.includes(subSectionId);
+
   return (
-    <div className="text-white w-[95%] mx-auto border border-richblack-700">
+    <div className="mx-auto w-11/12 max-w-5xl py-8 text-richblack-5">
       {
-        !videoData ?
-          (
-            <div> There is no video available</div>
-          ) :
-          (
-            <div className="mt-4 relative">
-              <ReactPlayer
-                ref={playerRef}
-                width='100%'
-                height='70%'
-                playsinline
-                onEnded={() => setVideoEnded(true)}
-                url={videoData.videoUrl}
-                controls={true}
-              />
-
-              <FaCirclePlay className="text-3xl absolute top-[50%] left-[50%] translate-x-[-50%] -translate-y-[-50%]" />
-              {
-
-                videoEnded && (
-                  <div>
-                    {
-                      !completedLectures.completedVideos.includes(subSectionId) && (
-
-                        <button
-                          disabled={loading}
-                          onClick={handleLectureCompletion}
-                          className="bg-yellow-50 px-3 py-2 rounded-md text-richblack-900"
-                        >
-                          {!loading ? "Mark As Completed" : "Loading..."}
-                        </button>
-                      )
-                    }
-                    <button
-                      className="bg-richblack-800 px-3 py-2 rounded-md text-yellow-50"
-                      disabled={loading}
-                      onClick={() => {
-                        if (playerRef?.current) {
-
-                          playerRef.current.seekTo(0);
-                          setVideoEnded(false);
-                        }
-                      }}
-                    >
-                      Rewatch
-                    </button>
-                    <div>
-                      {!isFirstVideo() && (
-                        <button
-                          disabled={loading}
-                          onClick={goToPrevVideo}
-                          className="bg-yellow-50 px-3 py-2 rounded-md text-richblack-900">
-                          Prev
-                        </button>
-                      )}
-                      {
-                        !isLastVideo() && (
-
-                          <button
-                            disabled={loading}
-                            onClick={goToNextVideo}
-                            className="bg-yellow-50 px-3 py-2 rounded-md text-richblack-900">
-                            Next
-                          </button>
-                        )
-                      }
-                    </div>
-                  </div>
-                )
-              }
-              <div className="mt-4">
-                <p>{videoData.title}</p>
-                <p>{videoData.description}</p>
+        !videoData ? (
+          <div className="rounded-3xl border border-dashed border-white/15 px-6 py-20 text-center text-richblack-200">
+            There is no video available
+          </div>
+        ) : (
+          <div>
+            <div className="overflow-hidden rounded-3xl border border-white/10 bg-black">
+              <div className="aspect-video">
+                <ReactPlayer
+                  ref={playerRef}
+                  width='100%'
+                  height='100%'
+                  playsinline
+                  onEnded={() => setVideoEnded(true)}
+                  url={videoData.videoUrl}
+                  controls={true}
+                />
               </div>
             </div>
 
-          )
+            <div className="mt-6 flex flex-wrap items-start justify-between gap-4">
+              <div className="min-w-0">
+                <h1 className="section-title text-4xl">{videoData.title}</h1>
+                {completed && <span className="mt-2 inline-block rounded-full border border-white/20 px-3 py-0.5 text-xs text-richblack-100">Completed</span>}
+              </div>
+              <div className="flex flex-wrap items-center gap-3">
+                {!isFirstVideo() && <button disabled={loading} onClick={goToPrevVideo} className={btnGhost}>Previous</button>}
+                {!completed && (
+                  <button disabled={loading} onClick={handleLectureCompletion} className={videoEnded ? btnPrimary : btnGhost}>
+                    {!loading ? "Mark as completed" : "Saving..."}
+                  </button>
+                )}
+                {!isLastVideo() && <button disabled={loading} onClick={goToNextVideo} className={completed || videoEnded ? btnPrimary : btnGhost}>Next lecture</button>}
+              </div>
+            </div>
+
+            {videoEnded && (
+              <button disabled={loading} className="mt-3 text-sm text-richblack-200 underline-offset-4 transition-colors hover:text-richblack-5 hover:underline"
+                onClick={() => { if (playerRef?.current) { playerRef.current.seekTo(0); setVideoEnded(false); } }}>
+                Watch again
+              </button>
+            )}
+
+            <div className="mt-6 rounded-3xl border border-white/10 bg-richblack-800/80 p-6">
+              <p className="text-xs uppercase tracking-[0.2em] text-richblack-300">About this lecture</p>
+              <p className="mt-3 font-light leading-relaxed text-richblack-100">{videoData.description}</p>
+            </div>
+          </div>
+        )
       }
     </div>
   )

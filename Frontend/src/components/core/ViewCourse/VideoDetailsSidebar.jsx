@@ -36,82 +36,66 @@ const VideoDetailsSidebar = ({ setReviewModal }) => {
 
     }, [courseSectionData, courseEntireData, sectionId, subSectionId]);
 
+    const done = completedLectures?.completedVideos?.length || 0;
+    const pct = totalNoOfLectures ? Math.round((done / totalNoOfLectures) * 100) : 0;
+
     return (
-        <div className="min-w-[222px] h-[calc(100vh-3.5rem)] flex flex-col bg-richblack-800 border-r-[1px]">
-            {/* Buttons and heading  */}
-            <div className="py-4 px-3 flex flex-col gap-4">
-                {/* buttons */}
-                <div className="flex flex-row items-center justify-between">
-                    <button
-                        onClick={() => navigate('/dashboard/enrolled-courses')}
-                        className="text-3xl text-richblack-200"><IoChevronBackCircleOutline />
+        <aside className="sticky top-0 flex h-screen w-[300px] shrink-0 flex-col border-r border-white/10 bg-black">
+            <div className="flex flex-col gap-5 border-b border-white/10 px-5 pb-5 pt-5">
+                <div className="flex items-center justify-between">
+                    <button onClick={() => navigate('/dashboard/enrolled-courses')}
+                        className="flex items-center gap-2 text-sm text-richblack-100 transition-colors hover:text-richblack-5">
+                        <IoChevronBackCircleOutline className="text-2xl" /> My courses
                     </button>
-                    <button
-                        onClick={() => setReviewModal(true)}
-                        className="px-2 py-2 bg-yellow-50 text-richblack-900 rounded-sm"
-                    >
-                        Add Review
+                    <button onClick={() => setReviewModal(true)} className="btn-ghost rounded-full px-4 py-1.5 text-xs font-medium">
+                        Add review
                     </button>
                 </div>
-                {/* heading  */}
                 <div>
-                    <p className="text-richblack-50 text-lg">{courseEntireData?.courseName}</p>
-                    <p className="text-richblack-100">{completedLectures?.completedVideos?.length + "/" + totalNoOfLectures}</p>
+                    <p className="font-display text-2xl font-semibold leading-tight text-richblack-5">{courseEntireData?.courseName}</p>
+                    <div className="mt-3 flex items-center justify-between text-xs text-richblack-200">
+                        <span>{done} of {totalNoOfLectures} lectures</span><span>{pct}%</span>
+                    </div>
+                    <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/10">
+                        <div className="h-full rounded-full bg-richblack-5 transition-all duration-500" style={{ width: `${pct}%` }} />
+                    </div>
                 </div>
             </div>
 
-            {/* for sections and subSections  */}
-            <div>
-                {
-                    courseSectionData.map((section, index) => (
-                        <div
-                            onClick={() => setActiveStatus(section._id)}
-                            key={index}
-                            className=""
-                        >
-                            {/* // sections  */}
-                            <div className="relative px-2 py-3 flex flex-row justify-between items-center cursor-pointer bg-richblack-700 border border-richblack-900 text-richblack-5">
-                                <p>{section.sectionName}</p>
-                                <MdOutlineArrowDropDownCircle className="text-xl" />
-                                {
-                                    activeStatus === section._id && (
-                                        <p className="absolute top-0 left-0 h-full w-[3px] bg-yellow-50"></p>
-                                    )
-                                }
-                            </div>
-                            <div>
-                                {
-                                    activeStatus === section?._id && (
-
-                                        <div className="">
-                                            {
-                                                section?.subSection?.map((data, index) => (
-
-                                                    <div
-                                                        key={index}
-                                                        onClick={() => {
-                                                            navigate(`/view-course/${courseEntireData?._id}/section/${section?._id}/subSection/${data?._id}`)
-                                                            setVideobarActive(data._id)
-                                                        }}
-                                                        className={`py-2 px-2 text-base font-mono flex flex-row gap-3 items-center cursor-pointer ${videobarActive === data._id ? 'bg-yellow-200 text-richblack-900' : 'bg-richblack-700'} text-richblack-5`}>
-                                                        <input
-                                                            readOnly
-                                                            type="checkbox"
-                                                            checked={completedLectures?.completedVideos?.includes(data._id)}
-                                                        />
-                                                        <p>{data.title}</p>
-                                                    </div>
-                                                ))
-                                            }
-                                        </div>
-                                    )
-                                }
-                            </div>
+            <div className="flex-1 overflow-y-auto px-3 py-4" data-lenis-prevent>
+                {courseSectionData.map((section, index) => {
+                    const open = activeStatus === section._id;
+                    return (
+                        <div key={index} className="mb-2">
+                            <button type="button" onClick={() => setActiveStatus(open ? '' : section._id)}
+                                className="flex w-full items-center justify-between rounded-xl px-3 py-3 text-left transition-colors hover:bg-white/[0.04]">
+                                <span className="text-[15px] font-medium text-richblack-5">{section.sectionName}</span>
+                                <MdOutlineArrowDropDownCircle className={`text-xl text-richblack-300 transition-transform ${open ? "rotate-180" : ""}`} />
+                            </button>
+                            {open && (
+                                <div className="mt-1 flex flex-col gap-0.5">
+                                    {section?.subSection?.map((data, i) => {
+                                        const active = videobarActive === data._id;
+                                        const completed = completedLectures?.completedVideos?.includes(data._id);
+                                        return (
+                                            <button key={i} type="button"
+                                                onClick={() => {
+                                                    navigate(`/view-course/${courseEntireData?._id}/section/${section?._id}/subSection/${data?._id}`)
+                                                    setVideobarActive(data._id)
+                                                }}
+                                                className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm transition-colors ${active ? "bg-richblack-800 text-richblack-5" : "text-richblack-100 hover:bg-white/[0.04]"}`}>
+                                                <span className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border text-[9px] ${completed ? "border-richblack-5 bg-richblack-5 text-richblack-900" : "border-white/25"}`}>{completed && "✓"}</span>
+                                                <span className="truncate">{data.title}</span>
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            )}
                         </div>
-                    ))
-                }
+                    );
+                })}
             </div>
-        </div>
+        </aside>
     )
 }
 

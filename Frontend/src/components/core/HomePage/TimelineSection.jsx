@@ -34,31 +34,33 @@ const timeline = [
 
 const TimelineSection = () => {
     return (
-        <div className="">
+        <div className="w-full">
             <div className="flex flex-col md:flex-row gap-16 items-center" >
-                <div className="w-[90%] md:w-[35%] flex flex-col gap-12">
+                <div className="w-[90%] md:w-[38%] flex flex-col gap-4 relative">
+                    <div className="absolute left-[27px] top-6 bottom-6 w-px bg-gradient-to-b from-yellow-50/60 via-yellow-50/20 to-transparent" />
                     {timeline.map((value, key) => (
-                        <div key={key} className="flex flex-row items-center gap-10">
-                            <div className="w-[50px] h-[50px] bg-white rounded-full flex justify-center items-center shadow " >
-                                <img src={value.Logo} alt="" />
+                        <div key={key} data-reveal className="relative flex flex-row items-center gap-7 py-4">
+                            <div className="relative z-10 w-[56px] h-[56px] shrink-0 bg-richblack-900 rounded-full flex justify-center items-center border border-yellow-50/50 shadow-[0_0_30px_-4px_rgba(232,196,104,0.5)]" >
+                                <img className="w-6" src={value.Logo} alt="" />
                             </div>
-                            <div className="flex flex-col gap-1 " >
-                                <div className="font-semibold text-[18px]" >{value.heading}</div>
-                                <div className="text-base" >{value.description}</div>
-                            </div>                                                        
-                        </div> 
+                            <div className="flex flex-col gap-1">
+                                <div className="font-display font-semibold text-2xl text-richblack-5" >{value.heading}</div>
+                                <div className="text-[15px] text-richblack-200 font-light" >{value.description}</div>
+                            </div>
+                        </div>
                     ))}
                 </div>
-                <div className="w-[95%] md:w-[50%] relative shadow-blue-200" >
-                    <img className="shadow-white h-fit object-cover" src={TimelineImage} alt="" />
-                    <div className="absolute w-[100%] md:w-[70%] left-[50%] translate-x-[-50%] translate-y-[-50%] flex flex-row bg-caribbeangreen-700 text-white uppercase py-7">
-                          <div className="w-[50%] flex flex-row gap-4 items-center md:border-r border-caribbeangreen-300 px-7" >
-                            <p className="md:text-3xl font-bold"  >10</p> 
-                            <p className="text-caribbeangreen-200 text-sm " >Years Experiences</p>
+                <div className="w-[95%] md:w-[52%] relative mb-16" data-reveal>
+                    <div className="absolute -inset-4 rounded-3xl bg-yellow-50/10 blur-3xl" />
+                    <img className="relative rounded-2xl h-fit object-cover border hairline" src={TimelineImage} alt="" />
+                    <div className="absolute left-[50%] -translate-x-1/2 -bottom-10 w-[88%] md:w-[72%] flex flex-row glass !bg-richblack-900/85 rounded-2xl text-richblack-5 uppercase py-6 shadow-2xl shadow-black/60">
+                        <div className="w-[50%] flex flex-row gap-4 items-center md:border-r hairline px-7" >
+                            <p className="font-display text-4xl md:text-5xl font-semibold gold-text">10</p>
+                            <p className="text-richblack-100 text-[11px] tracking-[0.18em]" >Years Experience</p>
                         </div>
-                        <div className=" md:w-[50%] flex flex-row gap-4 px-7 items-center" >
-                            <p className="md:text-3xl font-bold">250</p>
-                            <p className="text-sm text-caribbeangreen-200">Types of Courses</p>
+                        <div className="md:w-[50%] flex flex-row gap-4 px-7 items-center" >
+                            <p className="font-display text-4xl md:text-5xl font-semibold gold-text">250</p>
+                            <p className="text-[11px] tracking-[0.18em] text-richblack-100">Types of Courses</p>
                         </div>
                     </div>
                 </div>

@@ -96,11 +96,11 @@ const signUp = async (req, res) => {
 
     try {
 
-        const { firstName, lastName, email, password, confirmPassword, accountType, otp } = req.body;
+        const { firstName, lastName, email, password, confirmPassword, accountType } = req.body;
     
         //validate fields
 
-        if (!firstName || !lastName || !email || !password || !confirmPassword || !accountType || !otp) {
+        if (!firstName || !lastName || !email || !password || !confirmPassword || !accountType) {
 
             return res.status(403).json({
 
@@ -134,33 +134,6 @@ const signUp = async (req, res) => {
             });
         }
     
-        //find most recent otp from the database
-
-        let recentOtp = await OTP.findOne({ email }).sort({ createdAt: -1 }).limit(1);
-        // console.log(recentOtp);
-    
-        //otp length is empty
-
-        if (recentOtp.length === null || recentOtp.length === 0 ) {
-
-            return res.status(401).json({
-
-                success: false,
-                message: "There is an empty otp",
-            });
-        }
-
-        //otp matching fail
-    
-        if (recentOtp.otp !== otp) {
-
-            return res.status(401).json({
-
-                success: false,
-                message: "Invalid Otp",
-            })
-        }
-
         //hash password and save
 
         const hashPassword = await bcrypt.hash(password, 10);
@@ -383,4 +356,4 @@ const changePassword = async(req, res) => {
 
 }
 
-module.exports = { sendOTP, signUp, login, changePassword };
+module.exports = { sendOTP, signUp, login, changePassword };

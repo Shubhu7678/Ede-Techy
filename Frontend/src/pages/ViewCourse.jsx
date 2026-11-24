@@ -49,20 +49,15 @@ const ViewCourse = () => {
     }, [])
 
 
-    if (loading) return <div>Loading...</div>;
+    if (loading) return <div className="flex min-h-screen items-center justify-center bg-richblack-900"><div className="spinner" /></div>;
     return (
-        <>
-            <div>
-                <div className="flex flex-row">
-                    <VideoDetailsSidebar setReviewModal={setReviewModal} />
-                    <div className="w-full overflow-y-auto h-[calc(100vh-3.5rem)]">
-                        <Outlet />
-                    </div>
-                </div>
-
-                {reviewModal && <CourseReviewModal setReviewModal={setReviewModal} />}
+        <div className="dash flex min-h-screen bg-richblack-900">
+            <VideoDetailsSidebar setReviewModal={setReviewModal} />
+            <div className="min-w-0 flex-1">
+                <Outlet />
             </div>
-        </>
+            {reviewModal && <CourseReviewModal setReviewModal={setReviewModal} />}
+        </div>
     )
 }
 

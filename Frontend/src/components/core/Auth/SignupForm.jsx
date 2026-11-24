@@ -1,19 +1,23 @@
 import { useState } from "react"
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"
 import { toast } from "react-hot-toast"
 
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 
-import { sendOtp } from "../../../services/operations/authAPI"
-import { setSignupData } from "../../../slices/authSlice"
+import { signUp } from "../../../services/operations/authAPI"
 import { ACCOUNT_TYPE } from "../../../utils/constants"
 import Tab from "../../common/Tab"
-import { GrFormPreviousLink } from "react-icons/gr"
+import { Link } from "react-router-dom"
+import { labelCls, fieldCls } from "./authStyles"
 
 function SignupForm() {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const { loading } = useSelector((state) => state.auth);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirm, setShowConfirm] = useState(false);
 
       // student or instructor
     const [accountType, setAccountType] = useState(ACCOUNT_TYPE.STUDENT);
@@ -70,122 +74,66 @@ function SignupForm() {
 
         // console.log(formData);
 
-        const signupData = {
-
-            ...formData,
-            accountType
-        }
-
-        // sendOtp(email);
-        dispatch(sendOtp(formData.email, navigate));
-        dispatch(setSignupData(signupData));
+        dispatch(signUp(firstName, lastName, email, password, confirmPassword, accountType, null, navigate));
     }
+
+    const eye = (shown, toggle) => (
+        <button type="button" onClick={toggle} aria-label="Toggle password visibility"
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-xl text-richblack-200 transition-colors hover:text-yellow-50">
+            {shown ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+        </button>
+    );
 
     return (
         <div>
-            {/* Tab */}
             <Tab tabData={tabData} field={accountType} setField={setAccountType} />
-            {/* Form */}
-            <form onSubmit={handleSubmit} className="flex w-full flex-col gap-y-4">
-                <div className="flex gap-x-4">
-                    <label>
-                        <p className="mb-1 text-[0.875rem] leading-[1.375rem] text-richblack-5">
-                            First Name <sup className="text-pink-200">*</sup>
-                        </p>
-                        <input required type="text" name="firstName" placeholder="Enter first name"
-                            
-                            onChange={handleOnChange}
-                            style={{
-                                boxShadow: "inset 0px -1px 0px rgba(255, 255, 255, 0.18)",
-                            }}
-                            className="w-full rounded-[0.5rem] bg-richblack-800 p-[12px] text-richblack-5"
-                        />
-                    </label>
-                    <label>
-                        <p className="mb-1 text-[0.875rem] leading-[1.375rem] text-richblack-5">
-                            Last Name <sup className="text-pink-200">*</sup>
-                        </p>
-                        <input
-                            required
-                            type="text"
-                            onChange={handleOnChange}
-                            name="lastName"
-                            placeholder="Enter last name"
-                            style={{
-                                boxShadow: "inset 0px -1px 0px rgba(255, 255, 255, 0.18)",
-                            }}
-                            className="w-full rounded-[0.5rem] bg-richblack-800 p-[12px] text-richblack-5"
-                        />
-                    </label>
+            <form onSubmit={handleSubmit} className="flex w-full flex-col gap-y-5">
+                <div className="flex flex-col gap-5 sm:flex-row">
+                    <div className="w-full">
+                        <label htmlFor="firstName" className={labelCls}>First Name <sup className="text-pink-200">*</sup></label>
+                        <input id="firstName" required type="text" name="firstName" placeholder="Enter first name"
+                            value={firstName} onChange={handleOnChange} className={fieldCls} />
+                    </div>
+                    <div className="w-full">
+                        <label htmlFor="lastName" className={labelCls}>Last Name <sup className="text-pink-200">*</sup></label>
+                        <input id="lastName" required type="text" name="lastName" placeholder="Enter last name"
+                            value={lastName} onChange={handleOnChange} className={fieldCls} />
+                    </div>
                 </div>
-                <label className="w-full">
-                    <p className="mb-1 text-[0.875rem] leading-[1.375rem] text-richblack-5">
-                        Email Address <sup className="text-pink-200">*</sup>
-                    </p>
-                    <input
-                        required
-                        type="text"
-                        name="email"
-                          onChange={handleOnChange}
-                        placeholder="Enter email address"
-                        style={{
-                            boxShadow: "inset 0px -1px 0px rgba(255, 255, 255, 0.18)",
-                        }}
-                        className="w-full rounded-[0.5rem] bg-richblack-800 p-[12px] text-richblack-5"
-                    />
-                </label>
-                <div className="flex gap-x-4">
-                    <label className="relative">
-                        <p className="mb-1 text-[0.875rem] leading-[1.375rem] text-richblack-5">
-                            Create Password <sup className="text-pink-200">*</sup>
-                        </p>
-                        <input
-                            required
-                            type="password"
-                            name="password"
-                              onChange={handleOnChange}
-                            placeholder="Enter Password"
-                            style={{
-                                boxShadow: "inset 0px -1px 0px rgba(255, 255, 255, 0.18)",
-                            }}
-                            className="w-full rounded-[0.5rem] bg-richblack-800 p-[12px] pr-10 text-richblack-5"
-                        />
-                        <span
 
-                            className="absolute right-3 top-[38px] z-[10] cursor-pointer"
-                        >
-
-                        </span>
-                    </label>
-                    <label className="relative">
-                        <p className="mb-1 text-[0.875rem] leading-[1.375rem] text-richblack-5">
-                            Confirm Password <sup className="text-pink-200">*</sup>
-                        </p>
-                        <input
-                            required
-                            type="password"
-                            name="confirmPassword"
-                              onChange={handleOnChange}
-                            placeholder="Confirm Password"
-                            style={{
-                                boxShadow: "inset 0px -1px 0px rgba(255, 255, 255, 0.18)",
-                            }}
-                            className="w-full rounded-[0.5rem] bg-richblack-800 p-[12px] pr-10 text-richblack-5"
-                        />
-                        <span
-                            onClick={() => setShowConfirmPassword((prev) => !prev)}
-                            className="absolute right-3 top-[38px] z-[10] cursor-pointer"
-                        >
-                        </span>
-                    </label>
+                <div>
+                    <label htmlFor="email" className={labelCls}>Email Address <sup className="text-pink-200">*</sup></label>
+                    <input id="email" required type="text" name="email" placeholder="Enter email address"
+                        value={email} onChange={handleOnChange} className={fieldCls} />
                 </div>
-                <button
-                    type="submit"
-                    className="mt-6 rounded-[8px] bg-yellow-50 py-[8px] px-[12px] font-medium text-richblack-900"
-                >
-                    Create Account
+
+                <div className="flex flex-col gap-5 sm:flex-row">
+                    <div className="w-full">
+                        <label htmlFor="password" className={labelCls}>Create Password <sup className="text-pink-200">*</sup></label>
+                        <div className="relative">
+                            <input id="password" required type={showPassword ? "text" : "password"} name="password" placeholder="Enter password"
+                                value={password} onChange={handleOnChange} className={`${fieldCls} pr-12`} />
+                            {eye(showPassword, () => setShowPassword((p) => !p))}
+                        </div>
+                    </div>
+                    <div className="w-full">
+                        <label htmlFor="confirmPassword" className={labelCls}>Confirm Password <sup className="text-pink-200">*</sup></label>
+                        <div className="relative">
+                            <input id="confirmPassword" required type={showConfirm ? "text" : "password"} name="confirmPassword" placeholder="Confirm password"
+                                value={confirmPassword} onChange={handleOnChange} className={`${fieldCls} pr-12`} />
+                            {eye(showConfirm, () => setShowConfirm((p) => !p))}
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" disabled={loading} className="btn-gold mt-1 w-full rounded-full py-3.5 font-semibold tracking-wide disabled:opacity-60">
+                    {loading ? "Creating account..." : "Create Account"}
                 </button>
             </form>
+
+            <p className="mt-6 text-center text-sm text-richblack-200">
+                Already have an account? <Link to="/login" className="font-medium text-yellow-50 hover:text-yellow-25">Sign in</Link>
+            </p>
         </div>
     )
 }

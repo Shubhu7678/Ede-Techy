@@ -10,7 +10,6 @@ const {
 export const getCatalogPageData = async(categoryId) => {
   
     let result = [];
-    const toastId = toast.loading('Loading...');
 
     try {
 
@@ -22,7 +21,6 @@ export const getCatalogPageData = async(categoryId) => {
             throw new Error(response.data.message);
         }
 
-        toast.success(response.data.message);
         result = response.data;
     } catch (err) { 
 
@@ -31,7 +29,6 @@ export const getCatalogPageData = async(categoryId) => {
         result = err.response.data;
     }
 
-    toast.dismiss(toastId);
     return result;
 
 }

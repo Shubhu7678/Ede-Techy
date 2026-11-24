@@ -3,6 +3,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import { NavLink } from 'react-router-dom';
 import { getResetPasswordToken } from '../services/operations/authAPI';
 import { FaArrowLeft } from "react-icons/fa6";
+import { MdMarkEmailRead } from "react-icons/md";
+import CenteredCard from '../components/core/Auth/CenteredCard';
+import { labelCls, fieldCls } from '../components/core/Auth/authStyles';
 
 const ForgotPassword = () => {
 
@@ -12,69 +15,44 @@ const ForgotPassword = () => {
     const dispatch = useDispatch();
 
     const handleOnSubmit = (e) => {
-
         e.preventDefault();
         dispatch(getResetPasswordToken(email, setEmailSent, setEmail));
-
     }
 
-
     return (
-        <div className="" >
-            {
-                loading ? (
-                    <div className="text-richblack-5 w-full text-center" >
-                        Loading...
-                    </div>
-                ) : (
-                    <div className="min-h-[calc(100vh-3.5rem)] flex items-center justify-center">
-                    <div className="w-[35%] flex flex-col justify-center gap-3" >
-                        <h1 className="text-3xl font-semibold text-richblack-5" >
-                            {!emailSent ? "Reset your password" : "Check your Email"}
-                        </h1>
-                        <p className="text-richblack-100 text-[1.125rem] leading-[1.625rem]" >
-                            {
-                                !emailSent ? "Have no fear, we will send you a link to reset your password.If you don't receive an email, please check your spam folder."
-                                    : `We have sent reset Email to ${email}`
-                            }
-                        </p>
-                        <form action="" onSubmit={handleOnSubmit}>
-                            {
-                                !emailSent && (
-
-                                    <label htmlFor="" className="relative mb-3" >
-                                        <p className="text-richblack-5 text-sm leading-[1.375rem]">Email Address
-                                            <sup className="text-pink-200" > *</sup>
-                                        </p>
-                                        <input
-                                            className="w-full text-richblack-5 rounded-md bg-richblack-800 p-[12px]"
-                                            required type="email" name="email" value={email}
-                                            onChange={(e) => setEmail(e.target.value)}
-                                            placeholder="Enter your Email Address"
-                                            style={{
-                                                boxShadow: "inset 0px -1px 0px rgba(255, 255, 255, 0.18)",
-                                            }}
-                                        />
-                                    </label>
-                                )
-                            }
-                            <button className="mt-4 rounded-md w-full text-richblack-900 bg-yellow-50 py-3"
-                                    type="submit" >
-                                {
-                                    !emailSent ? "Reset Password" : "Resend Email"
-                                }
-                            </button>
-                        </form>
-                            <NavLink to="/login" className="flex gap-1 items-center group" >
-                                <FaArrowLeft className="text-blue-100 text-sm group-hover:scale-90 duration-200 transition "  />
-                            <p className="text-blue-100 text-sm" >Back to Login</p>
-                        </NavLink>
-                            </div>
-                            </div>
-                )
-
+        <CenteredCard
+            eyebrow="Account recovery"
+            title={!emailSent ? "Reset your password" : "Check your email"}
+            subtitle={!emailSent
+                ? "Have no fear — we'll send you a link to reset your password. If you don't receive it, check your spam folder."
+                : `We've sent a reset link to ${email}.`}
+            footer={
+                <NavLink to="/login" className="group inline-flex items-center gap-2 text-sm text-richblack-100 transition-colors hover:text-yellow-25">
+                    <FaArrowLeft className="text-xs transition-transform duration-300 group-hover:-translate-x-1" /> Back to login
+                </NavLink>
             }
-        </div>
+        >
+            {emailSent && (
+                <div className="mb-6 flex flex-col items-center gap-3 text-center">
+                    <div className="flex h-16 w-16 items-center justify-center rounded-full border border-yellow-50/30 bg-yellow-50/10 text-3xl text-yellow-50">
+                        <MdMarkEmailRead />
+                    </div>
+                    <p className="text-sm font-light text-richblack-100">Didn't get it? You can send the link again.</p>
+                </div>
+            )}
+            <form onSubmit={handleOnSubmit} className="flex flex-col gap-5">
+                {!emailSent && (
+                    <div>
+                        <label htmlFor="email" className={labelCls}>Email Address <sup className="text-pink-200">*</sup></label>
+                        <input id="email" className={fieldCls} required type="email" name="email" value={email}
+                            onChange={(e) => setEmail(e.target.value)} placeholder="Enter your email address" />
+                    </div>
+                )}
+                <button type="submit" disabled={loading} className="btn-gold w-full rounded-full py-3.5 font-semibold tracking-wide disabled:opacity-60">
+                    {loading ? "Sending..." : !emailSent ? "Send reset link" : "Resend email"}
+                </button>
+            </form>
+        </CenteredCard>
     )
 }
 

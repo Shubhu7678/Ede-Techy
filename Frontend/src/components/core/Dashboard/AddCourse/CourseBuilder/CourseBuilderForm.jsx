@@ -7,6 +7,7 @@ import { setStep, setEditCourse, setCourse } from '../../../../../slices/courseS
 import toast from 'react-hot-toast';
 import { createSection,updateSection } from '../../../../../services/operations/courseDetailsApi';
 import NestedView from './NestedView';
+import { SAMPLE_SECTIONS } from '../../../../../utils/sampleLecture';
 
 const CourseBuilderForm = () => {
 
@@ -25,7 +26,6 @@ const CourseBuilderForm = () => {
 
   const handleCourseBuilderSubmit = async (data) => {
 
-    const toastId = toast.loading('Loading...');
     let result = [];
     if (editSectionName) {
 
@@ -51,7 +51,6 @@ const CourseBuilderForm = () => {
       setValue('sectionName', '');
     }
 
-    toast.dismiss(toastId);
   }
 
    const cancelEdit = () => {
@@ -100,79 +99,49 @@ const CourseBuilderForm = () => {
  
 
   return (
-    <div className="text-white p-3 mt-9 bg-richblack-800">
-      <div className="mt-1">
-        <p className="text-xl text-richblack-50 mb-5">Course Builder</p>
-        <form onSubmit={handleSubmit(handleCourseBuilderSubmit)}>
-          <div className="flex flex-col gap-2">
-            <label htmlFor="sectionName" className="text-richblack-100">Section Name <sup>*</sup></label>
-            <input type="text"
-              placeholder="Enter Section Name"
-              name="sectionName"
-              id="sectionName"
-              className="p-2 rounded-md bg-richblack-700 border-richblack-900"
-              style={{
-                boxShadow: "inset 0px -1px 0px rgba(255, 255, 255, 0.18)",
-              }}
-              {...register('sectionName', { required: true })}
-            />
-            {
-              errors.sectionName && (
-                <span className="text-red-500">Section Name is required</span>
-              )
-            }
+    <div className="rounded-3xl border border-white/10 bg-richblack-800/80 p-6 text-richblack-5 md:p-8">
+      <p className="font-display text-3xl font-semibold">Course builder</p>
+      <p className="mt-1 text-sm font-light text-richblack-200">Organise your course into sections, then add lectures to each one.</p>
+
+      <form onSubmit={handleSubmit(handleCourseBuilderSubmit)} className="mt-6">
+        <label htmlFor="sectionName" className="mb-2 block text-[13px] font-medium tracking-wide text-richblack-25">Section name <sup className="text-pink-200">*</sup></label>
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <input type="text" placeholder="e.g. Getting started" id="sectionName"
+            className="min-w-0 flex-1 px-4 py-3.5 text-[15px]"
+            {...register('sectionName', { required: true })} />
+          <div className="flex gap-3">
+            <button type="submit" className="btn-gold flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold">
+              <IoMdAddCircleOutline className="text-lg" /> {!editSectionName ? 'Create section' : 'Save name'}
+            </button>
+            {editSectionName && (
+              <button type="button" onClick={cancelEdit} className="btn-ghost rounded-full px-5 py-3 text-sm font-medium">Cancel</button>
+            )}
           </div>
-          <div className="mt-4">
-            <div className={`${editSectionName ? 'flex flex-row gap-2' : ''}`}>
-              <button
-                type="submit"
-                className="text-yellow-50 px-3 text-base font-medium py-2 rounded-sm flex items-center gap-1 bg-richblack-900"
-
-              >
-                <span>{!editSectionName ? 'Create Section' : 'Edit Section Name'}</span>
-                <IoMdAddCircleOutline />
-              </button>
-              {
-                editSectionName && (
-                  <button
-                    type="button"
-                    className="bg-yellow-50 text-base font-medium px-3 py-2 rounded-sm flex items-center gap-1 text-richblack-800"
-                    onClick={cancelEdit}
-                  >
-                    <span>Cancel Edit</span>
-
-                  </button>
-                )
-              }
-            </div>
-          </div>
-        </form>
-
-        {
-          course?.courseContent?.length > 0 && (
-            <NestedView handleChangeEditSectionName={handleChangeEditSectionName} />
-          )
-        }
-
-        <div className="mt-3 flex flex-row gap-3 justify-end pr-3">
-          <button
-            className="bg-richblack-900 text-yellow-50 px-3 py-1 rounded-sm"
-            onClick={goBack}
-          >
-            Back
-          </button>
-          <button
-            className="bg-yellow-50 text-base text-richblack-800 font-medium px-3 py-1 rounded-sm"
-            onClick={goToNext}
-          >
-            Next
-          </button>
         </div>
+        {errors.sectionName && <span className="mt-1.5 block text-xs text-pink-200">Section name is required</span>}
+        {!editSectionName && (
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            <span className="text-xs text-richblack-300">Quick add:</span>
+            {SAMPLE_SECTIONS.filter((n) => !course?.courseContent?.some((s) => s.sectionName === n)).map((n) => (
+              <button type="button" key={n} onClick={() => handleCourseBuilderSubmit({ sectionName: n })}
+                className="rounded-full border border-white/15 px-3 py-1 text-xs text-richblack-100 transition-colors hover:border-white/40 hover:text-richblack-5">
+                + {n}
+              </button>
+            ))}
+          </div>
+        )}
+      </form>
+
+      {course?.courseContent?.length > 0 && (
+        <NestedView handleChangeEditSectionName={handleChangeEditSectionName} />
+      )}
+
+      <div className="mt-8 flex justify-end gap-3 border-t hairline pt-6">
+        <button type="button" className="btn-ghost rounded-full px-6 py-3 text-sm font-medium" onClick={goBack}>Back</button>
+        <button type="button" className="btn-gold rounded-full px-7 py-3 text-sm font-semibold" onClick={goToNext}>Next</button>
       </div>
     </div>
-
   )
-
 }
 
 export default CourseBuilderForm;

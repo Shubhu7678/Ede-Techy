@@ -44,42 +44,22 @@ const PaymentVerification = () => {
       {
         loading &&
         (
-          <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-            <div className="bg-white p-8 rounded-lg shadow-md w-96">
-              <h1 className="text-2xl font-bold text-center text-yellow-600">Verifying Payment</h1>
-              <p className="mt-4 text-center text-gray-600">
-                Your payment is being processed. Please do not refresh the page.
+          <div className="grain flex min-h-[calc(100vh-72px)] flex-col items-center justify-center px-4">
+            <div className="w-full max-w-md rounded-3xl border border-white/10 bg-richblack-800/80 p-10 text-center">
+              <div className="spinner mx-auto" />
+              <h1 className="section-title mt-8 text-4xl text-richblack-5">Verifying payment</h1>
+              <p className="mt-3 font-light leading-relaxed text-richblack-100">
+                Your payment is being processed. Please don't refresh the page.
               </p>
-
-              {/* Loader */}
-              <div className="flex justify-center mt-6">
-                <svg
-                  className="animate-spin h-10 w-10 text-yellow-600"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C6.74 0 2 4.74 2 12h2z"
-                  />
-                </svg>
-              </div>
-
-              <div className="mt-6">
-                <div className="flex items-center justify-between">
-                  <span className="font-medium">Transaction ID:</span>
-                  <span className="text-gray-700">{orderId}</span>
-                </div>
+              <div className="mt-8 flex items-center justify-between gap-4 rounded-xl border hairline bg-white/[0.02] px-4 py-3 text-sm">
+                <span className="text-richblack-200">Transaction ID</span>
+                <span className="truncate font-mono text-yellow-25">{orderId}</span>
               </div>
             </div>
           </div>
         )
       }
     </>
-
   )
 }
 

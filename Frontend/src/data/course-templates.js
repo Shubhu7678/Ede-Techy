@@ -1,0 +1,71 @@
+// Starter content for the Add Course form. Clicking a template fills the form so it can be edited.
+export const courseTemplates = [
+  {
+    label: "Web Development",
+    category: "Web Development",
+    title: "Complete Web Development Bootcamp",
+    description: "Go from zero to building real websites. Learn HTML, CSS, JavaScript, React and Node.js by creating projects you can put in your portfolio.",
+    price: 1499,
+    tags: ["HTML", "CSS", "JavaScript", "React", "Node.js"],
+    benefits: "Build responsive websites from scratch\nUnderstand modern JavaScript and React\nCreate and deploy full-stack web apps\nGet job-ready with portfolio projects",
+    requirements: ["A computer with internet access", "No prior coding experience needed", "A code editor such as VS Code"],
+  },
+  {
+    label: "Python",
+    category: "Python",
+    title: "Python Programming for Beginners",
+    description: "A friendly introduction to Python. Learn the fundamentals, write real scripts, and finish with projects that automate everyday tasks.",
+    price: 999,
+    tags: ["Python", "Programming", "Automation", "Beginner"],
+    benefits: "Write clean Python code with confidence\nWork with files, APIs and data\nAutomate repetitive tasks\nSolve problems the way programmers do",
+    requirements: ["A computer with internet access", "No prior experience needed"],
+  },
+  {
+    label: "Data Science",
+    category: "Data Science",
+    title: "Data Science with Python and SQL",
+    description: "Learn to clean, analyse and visualise data, then build your first machine-learning models using Python, SQL, pandas and scikit-learn.",
+    price: 1999,
+    tags: ["Data Science", "Python", "SQL", "Machine Learning", "Pandas"],
+    benefits: "Analyse real datasets end to end\nQuery databases with SQL\nVisualise data and tell clear stories\nTrain and evaluate machine-learning models",
+    requirements: ["Basic Python knowledge", "Comfort with high-school maths", "A computer with internet access"],
+  },
+  {
+    label: "Mobile Apps",
+    category: "Mobile App Development",
+    title: "Build Mobile Apps with React Native",
+    description: "Create cross-platform iOS and Android apps with React Native. Design screens, handle navigation and data, and publish your app.",
+    price: 1799,
+    tags: ["React Native", "Mobile", "Android", "iOS", "JavaScript"],
+    benefits: "Build apps for iOS and Android with one codebase\nNavigate, store data and call APIs\nUse device features like camera and location\nPublish your app to the stores",
+    requirements: ["Basic JavaScript knowledge", "A computer with internet access", "A phone or emulator for testing"],
+  },
+  {
+    label: "DevOps & Cloud",
+    category: "DevOps & Cloud",
+    title: "DevOps Essentials: Docker, CI/CD and Cloud",
+    description: "Learn how modern teams ship software. Containerise apps with Docker, automate pipelines with CI/CD and deploy to the cloud.",
+    price: 1899,
+    tags: ["DevOps", "Docker", "CI/CD", "Cloud", "Linux"],
+    benefits: "Containerise applications with Docker\nAutomate builds and deployments\nDeploy and monitor apps in the cloud\nWork confidently on the Linux command line",
+    requirements: ["Basic programming knowledge", "Familiarity with the command line", "A computer with internet access"],
+  },
+  {
+    label: "UI/UX Design",
+    category: "UI/UX Design",
+    title: "UI/UX Design with Figma",
+    description: "Design interfaces people love. Learn user research, wireframing, visual design and prototyping in Figma, and build a case study.",
+    price: 1299,
+    tags: ["UI", "UX", "Figma", "Design", "Prototyping"],
+    benefits: "Research users and define real problems\nWireframe and prototype in Figma\nApply colour, typography and layout well\nPresent a portfolio-ready case study",
+    requirements: ["No design experience needed", "A computer with internet access", "A free Figma account"],
+  },
+];
+
+export const tagSuggestions = ["Beginner friendly", "Projects", "Certificate", "Hands-on", "Career", "Interview prep"];
+export const requirementSuggestions = [
+  "A computer with internet access",
+  "No prior experience needed",
+  "Basic computer skills",
+  "A code editor such as VS Code",
+];

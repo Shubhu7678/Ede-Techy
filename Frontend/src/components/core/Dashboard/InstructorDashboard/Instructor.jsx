@@ -3,8 +3,17 @@ import { getInstructorData } from '../../../../services/operations/enrolledAPI';
 import { useSelector } from 'react-redux';
 import { fetchInstructorCourses } from '../../../../services/operations/courseDetailsApi';
 import { NavLink } from 'react-router-dom';
+import { LuLibrary, LuUsers, LuIndianRupee } from 'react-icons/lu';
 import InstructorChart from './InstructorChart';
-import { LiaPrayingHandsSolid } from "react-icons/lia";
+import PageHeader from '../PageHeader';
+
+const Stat = ({ icon: Icon, label, value }) => (
+     <div className="rounded-3xl border border-white/10 bg-richblack-800/80 p-6">
+          <span className="flex h-11 w-11 items-center justify-center rounded-xl border border-yellow-50/25 bg-yellow-50/10 text-xl text-yellow-50"><Icon /></span>
+          <p className="mt-5 text-xs uppercase tracking-[0.2em] text-richblack-300">{label}</p>
+          <p className="mt-1 font-display text-5xl font-semibold gold-text">{value}</p>
+     </div>
+);
 
 const Instructor = () => {
 
@@ -15,109 +24,57 @@ const Instructor = () => {
      const { user } = useSelector((state) => state.profile);
 
      useEffect(() => {
-
           const getCourseDataWithStats = async () => {
-
                setLoading(true);
-               //pending
-
                const instructorApiData = await getInstructorData(token);
                const result = await fetchInstructorCourses(token);
-
-               if (instructorApiData.length) {
-
-                    setInstructorData(instructorApiData);
-               }
-               if (result.length) {
-
-                    setCourses(result);
-               }
-
+               if (instructorApiData?.length) setInstructorData(instructorApiData);
+               if (result?.length) setCourses(result);
                setLoading(false);
-
           }
-
           getCourseDataWithStats();
      }, [])
 
-     // console.log("Instructor Data : ", instructorData);
      const totalAmount = instructorData?.reduce((acc, curr) => acc + curr.totalAmountGenerated, 0);
      const totalStudents = instructorData?.reduce((acc, curr) => acc + curr.totalStudentsEnrolled, 0);
-     // console.log("Total Amount : ", totalAmount);
-     // console.log("Total Students : ", totalStudents);
-     // console.log("Courses : ", courses);
-     return (
-          <div className="text-white w-[800px] mx-auto">
-               <div className="mb-2">
-                    <div className="flex flex-row items-center gap-2 text-xl">
-                    <p className="font-mono">Hi {user?.firstName}</p>
-                         <LiaPrayingHandsSolid className="text-richblack-100" />
-                         </div>
-                    <p className="text-richblack-100">Let's start something new</p>
-               </div>
-               {
-                    loading ?
-                         (
-                              <div> Loading...</div>
-                         )
-                         :
-                         courses.length > 0 ?
-                              (
-                                   <div>
-                                        <div>
-                                             <div className="flex gap-3">
-                                                  <InstructorChart courses={instructorData} />
-                                                  <div className="bg-richblack-800 w-[230px] p-5 rounded-md">
-                                                       <div className="flex flex-col gap-2">
-                                                            <p className="font-semibold text-richblack-50 text-xl">Statistics</p>
-                                                            <div className="">
-                                                                 <p className="text-richblack-400 mb-1">Total Courses</p>
-                                                                 <p className="text-richblack-100 text-xl font-bold">{courses.length}</p>
-                                                            </div>
-                                                            <div>
-                                                                 <p className="text-richblack-400 mb-1">Total Students</p>
-                                                                 <p className="text-richblack-100 text-xl font-bold">{totalStudents}</p>
-                                                            </div>
-                                                            <div>
-                                                                 <p className="text-richblack-400 mb-1">Total Income</p>
-                                                                 <p className="text-richblack-100 text-xl font-bold">{totalAmount}</p>
-                                                            </div>
-                                                       </div>
-                                                  </div>
-                                             </div>
-                                        </div>
-                                        <div className="bg-richblack-800 rounded-md p-4 mt-2">
-                                             {/* Render 3 courses  */}
-                                             <div className="flex flex-row justify-between gap-2 mb-2">
-                                                  <p className="text-richblack-50 font-semibold text-xl" >Your Courses</p>
-                                                  <NavLink to='/dashboard/my-courses' className="text-yellow-50">View All</NavLink>
-                                             </div>
-                                             <div className="flex flex-row justify-between">
-                                                  {
-                                                       courses?.slice(0, 3).map((course, index) => (
-                                                            <div className="flex flex-col gap-1" key={index}>
-                                                                 <img className="w-60 rounded-md flex-grow" src={course?.thumbnail} alt="" />
-                                                                 <p className="text-richblack-100">{course?.courseName}</p>
-                                                                 <div className="flex flex-row items-center text-richblack-100 gap-1 text-sm">
-                                                                      <p>{course?.studentsEnrolled?.length + " Students "}</p>
-                                                                      <p> | </p>
-                                                                      <p>{" " + course?.price}</p>
-                                                                 </div>
-                                                            </div>
-                                                       ))
-                                                  }
-                                             </div>
-                                        </div>
-                                   </div>
-                              )
-                              :
-                              (
-                                   <div>
-                                        <p>You have not created any courses Yet</p>
-                                        <NavLink to='/dashboard/add-course'>Create a Course</NavLink>
-                                   </div>
-                              )
 
+     return (
+          <div className="text-richblack-5">
+               <PageHeader title={`Hi ${user?.firstName}`} subtitle="Here's how your courses are doing." />
+               {
+                    loading ? (
+                         <div className="mt-14 flex justify-center"><div className="spinner" /></div>
+                    ) : courses.length > 0 ? (
+                         <div className="flex flex-col gap-6">
+                              <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+                                   <Stat icon={LuLibrary} label="Total courses" value={courses.length} />
+                                   <Stat icon={LuUsers} label="Total students" value={totalStudents} />
+                                   <Stat icon={LuIndianRupee} label="Total income" value={totalAmount} />
+                              </div>
+                              <InstructorChart courses={instructorData} />
+                              <div className="rounded-3xl border border-white/10 bg-richblack-800/80 p-6">
+                                   <div className="mb-5 flex items-center justify-between">
+                                        <p className="font-display text-2xl font-semibold">Your courses</p>
+                                        <NavLink to='/dashboard/my-courses' className="text-sm text-yellow-25 hover:text-yellow-5">View all →</NavLink>
+                                   </div>
+                                   <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+                                        {courses.slice(0, 3).map((course, index) => (
+                                             <div key={index} className="flex flex-col gap-2">
+                                                  <img className="aspect-video w-full rounded-2xl object-cover" src={course?.thumbnail} alt="" />
+                                                  <p className="mt-1 font-medium text-richblack-5">{course?.courseName}</p>
+                                                  <p className="text-sm text-richblack-200">{course?.studentsEnrolled?.length + " students"} · ₹ {course?.price}</p>
+                                             </div>
+                                        ))}
+                                   </div>
+                              </div>
+                         </div>
+                    ) : (
+                         <div className="rounded-3xl border border-dashed border-white/15 px-6 py-20 text-center">
+                              <p className="font-display text-3xl text-richblack-5">You haven't created a course yet</p>
+                              <p className="mt-2 text-sm font-light text-richblack-200">Start with a title, a thumbnail and a few lectures.</p>
+                              <NavLink to='/dashboard/add-course' className="btn-gold mt-7 inline-block rounded-full px-7 py-3 text-sm font-semibold">Create a course</NavLink>
+                         </div>
+                    )
                }
           </div>
      )

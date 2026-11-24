@@ -94,7 +94,7 @@ const CourseDetails = () => {
                     text2: "Login to purchase the course",
                     btn1Text: "Login",
                     btn2Text: "Cancel",
-                    btn1hander: () => navigate('/login'),
+                    btn1Handler: () => navigate('/login'),
                     btn2Handler: () => setConfirmationModal(null),
                 }
             )
@@ -122,8 +122,8 @@ const CourseDetails = () => {
                     text2: "Please Login to add to cart",
                     btn1Text: "Login",
                     btn2Text: "Cancel",
-                    btn1hander: () => navigate('/login'),
-                    btn2handler: () => setConfirmationModal(null),
+                    btn1Handler: () => navigate('/login'),
+                    btn2Handler: () => setConfirmationModal(null),
                 }
             )
         }
@@ -136,98 +136,85 @@ const CourseDetails = () => {
         toast.success("Link copied to clipboard");
 
     }
+    const enrolled = !!(user && courseData?.studentsEnrolled?.includes(user._id));
+    const instructorName = [courseData?.instructor?.firstName, courseData?.instructor?.lastName].filter(Boolean).join(" ");
+
     return (
-        <div className="text-white">
+        <div className="grain text-richblack-5">
 
-            <div className="w-full pb-8 md:pb-0 bg-richblack-700 md:h-[300px]">
-                <div className="w-11/12 max-w-maxContent mx-auto relative">
-                    <div className="pt-10 flex flex-col gap-2">
-                        <p className="text-3xl font-semibold">{courseData?.courseName}</p>
-                        <p>{courseData?.courseDescription}</p>
-                        <div className="flex flex-col md:flex-row gap-2">
-                            <p className="hidden md:block">{avgReviewCount}</p>
-                            <RatingStars Review_Count={avgReviewCount} />
-                            <p>{`(${courseData?.ratingAndReviews?.length} Reviews)`}</p>
-                            <p>{`${courseData?.studentsEnrolled?.length} Students Enrolled`}</p>
-                        </div>
-                        <p>{`Created By ${courseData?.instructor?.firstName + " " + courseData?.instructor?.lastName} `}</p>
-                        <div className="flex flex-row items-center gap-2">
-                            <MdOutlineInfo className="hidden md:block" />
-                            <p>Created At {formatDate(courseData?.createdAt)}</p>
-                            <TbWorld className="hidden md:block" />
-                            <p className="hidden md:block"> English</p>
-                        </div>
+            {/* Hero */}
+            <div className="relative -mt-[72px] overflow-hidden border-b hairline pt-[72px]">
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_80%_at_30%_0%,rgba(232,196,104,0.15),transparent_70%)]" />
+                <div className="relative mx-auto w-11/12 max-w-maxContent py-16 md:py-24 lg:pr-[400px]">
+                    <p className="eyebrow mb-4">Course</p>
+                    <h1 className="section-title text-4xl md:text-6xl">{courseData?.courseName}</h1>
+                    <p className="mt-5 max-w-2xl text-lg font-light leading-relaxed text-richblack-100">{courseData?.courseDescription}</p>
+                    <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-richblack-100">
+                        <span className="font-medium text-yellow-50">{avgReviewCount}</span>
+                        <RatingStars Review_Count={avgReviewCount} />
+                        <span>{`(${courseData?.ratingAndReviews?.length ?? 0} reviews)`}</span>
+                        <span className="text-richblack-400">•</span>
+                        <span>{`${courseData?.studentsEnrolled?.length ?? 0} students enrolled`}</span>
                     </div>
-                    <div className="block w-[90%] mt-8 md:mt-0 md:absolute md:top-10 md:right-0 md:w-[350px] rounded-md bg-richblack-800 p-4">
-                        <div className="flex flex-col gap-3">
-                            <img className="rounded-md" src={courseData?.thumbnail} alt="" />
-                            <p className="text-xl font-semibold text-richblack-50 pl-2">{"Rs. " + courseData?.price}</p>
+                    <p className="mt-3 text-sm text-richblack-100">Created by <span className="text-richblack-5">{instructorName}</span></p>
+                    <div className="mt-2 flex items-center gap-2 text-sm text-richblack-200">
+                        <MdOutlineInfo /> <span>Created {formatDate(courseData?.createdAt)}</span>
+                        <TbWorld className="ml-3" /> <span>English</span>
+                    </div>
+                </div>
+            </div>
+
+            <div className="relative mx-auto w-11/12 max-w-maxContent">
+                {/* Purchase card */}
+                <div className="relative z-10 mt-8 lg:absolute lg:-top-72 lg:right-0 lg:mt-0 lg:w-[360px]">
+                    <div className="rounded-3xl border border-yellow-50/25 bg-richblack-800 p-5 shadow-[0_40px_100px_-30px_rgba(232,196,104,0.35)]">
+                        <img className="aspect-video w-full rounded-2xl object-cover" src={courseData?.thumbnail} alt="" />
+                        <p className="mt-5 font-display text-4xl font-semibold gold-text">{"₹ " + (courseData?.price ?? "")}</p>
+                        <div className="mt-5 flex flex-col gap-3">
                             <button
-                                onClick={user && courseData?.studentsEnrolled.includes(user?._id) ?
-                                    (() => navigate('/dashboard/enrolled-courses')) :
-                                    (() => handleBuyCourse())
-                                }
-
-                                className="w-full py-2 rounded-md bg-yellow-50 text-richblack-900 font-bold"
+                                onClick={enrolled ? () => navigate('/dashboard/enrolled-courses') : () => handleBuyCourse()}
+                                className="btn-gold w-full rounded-full py-3.5 font-semibold"
                             >
-                                {user && courseData?.studentsEnrolled.includes(user._id) ? "Go to Course" : "Buy Now"}
+                                {enrolled ? "Go to course" : "Buy now"}
                             </button>
-                            {user && !courseData?.studentsEnrolled.includes(user._id) &&
-                                (
-                                <button
-                                    onClick={handleAddToCart}
-                                    className="w-full py-2 rounded-md bg-richblack-900 text">
-                                        Add to Cart
-                                    </button>
-                                )
-                            }
-                            <p className="text-sm text-richblack-100 text-center">30-Days Money-Back Guarantee</p>
-                            <div>
-                                <p className="text-white text-xl">This Course Includes :</p>
-                                <div className="mt-1 flex flex-col gap-1">
-                                    {
-                                        courseData?.instructions?.map((instruction, index) =>
-                                        (
-                                            <div key={index}
-                                                className="text-caribbeangreen-25 text-sm flex items-center gap-1">
-                                                <IoMdArrowDropright />
-                                                <p>{instruction}</p>
-                                            </div>
-                                        ))
-                                    }
-                                </div>
-                            </div>
-                            <p className="text-center">
-                                <button
-                                    className="inline-flex flex-row items-center gap-1 text-yellow-50"
-                                    onClick={handleShare}
-                                >
-                                    <FaShareFromSquare />
-                                    <span>Share</span>
+                            {user && !enrolled && (
+                                <button onClick={handleAddToCart} className="btn-ghost w-full rounded-full py-3.5 font-medium">
+                                    Add to cart
                                 </button>
-                            </p>
+                            )}
                         </div>
-                    </div>
-                </div>
-            </div>
-            {/* Section 2  */}
-            <div>
-                <div className="w-11/12 max-w-maxContent mx-auto mt-10">
-                    <div className="w-[90%] md:w-[67%]">
-                        <div className="flex flex-col gap-2 border border-richblack-700 p-5">
-                            <p className="text-2xl font-semibold text-richblack-100">What You Will Learn</p>
-                            <div className="text-richblack-100">
-                                { courseData?.whatYouWillLearn }
+                        <p className="mt-4 text-center text-xs text-richblack-200">30-day money-back guarantee</p>
+                        <div className="mt-5 border-t hairline pt-5">
+                            <p className="font-display text-2xl text-richblack-5">This course includes</p>
+                            <div className="mt-2 flex flex-col gap-1.5">
+                                {courseData?.instructions?.map((instruction, index) => (
+                                    <div key={index} className="flex items-center gap-1 text-sm text-yellow-25">
+                                        <IoMdArrowDropright />
+                                        <p>{instruction}</p>
+                                    </div>
+                                ))}
                             </div>
-                        </div>   
-                        <div className="mt-5">
-                            <CourseContent course={courseData} sections={totalNoOfSections} lectures={totalNoOfLectures} />
                         </div>
-                        
+                        <button className="mx-auto mt-5 flex items-center gap-2 text-sm text-yellow-50 transition-colors hover:text-yellow-25" onClick={handleShare}>
+                            <FaShareFromSquare /> Share
+                        </button>
+                    </div>
+                </div>
+
+                {/* Content */}
+                <div className="py-12 lg:w-[calc(100%-400px)]">
+                    <div className="glass rounded-3xl p-7">
+                        <p className="font-display text-3xl font-semibold text-richblack-5">What you will learn</p>
+                        <div className="mt-3 font-light leading-relaxed text-richblack-100">
+                            {courseData?.whatYouWillLearn}
+                        </div>
+                    </div>
+                    <div className="mt-8">
+                        <CourseContent course={courseData} sections={totalNoOfSections} lectures={totalNoOfLectures} />
                     </div>
                 </div>
             </div>
-            <Footer/>
+            <Footer />
             {confirmationModal && (<ConfirmationModal modalData={confirmationModal} />)}
         </div>
     )

@@ -14,18 +14,20 @@ const Catalog = () => {
     const [catalogPageData, setCatalogPageData] = useState(null);
     const [categoryId, setCategoryId] = useState('');
     const [active, setActive] = useState(0);
+    const [notFound, setNotFound] = useState(false);
 
     useEffect(() => {
 
         const getAllCategoriesDetails = async () => {
 
-            const toastId = toast.loading('Loading...');
-            const result = await apiConnector('GET', categories.CATEGORIES_API);
-            if (result) {
-                const category_id = result.data.allCategories.filter((category) => category.name === catalogName)[0]._id;
-                toast.dismiss(toastId);
-                // console.log(category_id);
-                setCategoryId(category_id);
+            try {
+                const result = await apiConnector('GET', categories.CATEGORIES_API);
+                const match = result?.data?.allCategories?.find((category) => category.name === catalogName);
+                setCategoryId(match?._id || '');
+                setNotFound(!match);
+            } catch (err) {
+                console.log(err);
+                setNotFound(true);
             }
         }
 
@@ -54,74 +56,71 @@ const Catalog = () => {
 
     }, [categoryId]);
 
+    const category = catalogPageData?.selectedCategory;
+    const Tab = ({ i, children }) => (
+        <button onClick={() => setActive(i)}
+            className={`relative px-1 pb-3 text-sm font-medium transition-colors ${active === i ? 'text-yellow-25' : 'text-richblack-200 hover:text-richblack-5'}`}>
+            {children}
+            <span className={`absolute inset-x-0 -bottom-px h-0.5 rounded-full bg-yellow-50 transition-opacity ${active === i ? 'opacity-100' : 'opacity-0'}`} />
+        </button>
+    );
+
+    if (notFound) {
+        return (
+            <div className="grain flex min-h-[calc(100vh-72px)] flex-col items-center justify-center px-4 text-center text-richblack-5">
+                <p className="eyebrow mb-4">Catalog</p>
+                <h1 className="section-title text-5xl md:text-6xl">Category not found</h1>
+                <p className="mt-4 max-w-md font-light text-richblack-100">We couldn't find "{catalogName}". It may not exist yet — try another category from the menu.</p>
+            </div>
+        );
+    }
+
     return (
-        <div className="text-white">
+        <div className="grain text-richblack-5">
 
-            {/* Section 1 */}
-            <div className="w-full h-[200px] bg-richblack-700 relative">
-                <div className="w-11/12  mx-auto pt-16 max-w-maxContent">
-                    <div className="flex flex-col gap-1">
-                        <p>
-                            {`Home / Catalog / `}
-                            <span className="text-yellow-50">{catalogPageData?.selectedCategory?.name}</span>
-                        </p>
-                        <p className="text-3xl text-richblack-25 font-semibold">{catalogPageData?.selectedCategory?.name}</p>
-                        <p className="text-richblack-100 text-base">{catalogPageData?.selectedCategory?.description}</p>
-                    </div>
+            {/* Hero */}
+            <div className="relative -mt-[72px] overflow-hidden border-b hairline pt-[72px]">
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_80%_at_50%_0%,rgba(232,196,104,0.15),transparent_70%)]" />
+                <div className="relative mx-auto w-11/12 max-w-maxContent py-20 md:py-28">
+                    <p className="text-sm text-richblack-200">
+                        Home / Catalog / <span className="text-yellow-50">{category?.name}</span>
+                    </p>
+                    <h1 className="section-title mt-4 text-5xl md:text-7xl">{category?.name}</h1>
+                    <p className="mt-5 max-w-2xl text-lg font-light leading-relaxed text-richblack-100">{category?.description}</p>
                 </div>
-
             </div>
 
-            {/* Section 2 */}
-
-            <div className="w-full my-10">
-                {/* Module 1 */}
-                <div className="w-11/12 max-w-maxContent mx-auto">
-                    <div className="text-3xl font-semibold">Courses to get you started</div>
-                    <div className="flex gap-3 my-2 border-richblack-700 border-b-2">
-                        <p
-                            onClick={() => setActive(0)}
-                            className={`${active === 0 ? 'text-yellow-50 border-yellow-50 border-b-2' : 'text-richblack-100'} cursor-pointer`}>
-                            Most Popular
-                        </p>
-                        <p
-                            onClick={() => setActive(1)}
-                            className={`${active === 1 ? 'text-yellow-50 border-yellow-50 border-b-2' : 'text-richblack-100'} cursor-pointer`}
-                        >New</p>
+            <div className="my-16 w-full">
+                <div className="mx-auto w-11/12 max-w-maxContent">
+                    <h2 className="section-title text-4xl md:text-5xl">Courses to get you <span className="gold-text italic">started</span></h2>
+                    <div className="mt-6 flex gap-6 border-b hairline">
+                        <Tab i={0}>Most Popular</Tab>
+                        <Tab i={1}>New</Tab>
                     </div>
-                    <div className="mt-4">
-                        {/* {console.log(catalogPageData)} */}
-                        <CourseSlider
-                            Courses={catalogPageData?.selectedCategory?.courses}
-                        />
-                    </div>
-                </div>
-
-                {/* Module 2  */}
-                <div className="w-11/12 max-w-maxContent mx-auto mt-10">
-                    <p className="text-3xl font-semibold">Top Courses in {catalogPageData?.selectedCategory?.name}</p>
                     <div className="mt-8">
-                        <CourseSlider
-                            Courses={catalogPageData?.differentCategory?.courses}
-                        />
+                        <CourseSlider Courses={category?.courses} />
                     </div>
                 </div>
-                {/* Modeule 3  */}
-                <div className="mt-10 w-11/12 max-w-maxContent mx-auto">
-                    <p className="text-3xl font-semibold">Frequently Bought</p>
-                    <div>
-                        <div className="w-[90%] flex mt-8 gap-10 flex-wrap">
-                            {
-                                catalogPageData?.mostSellingCourses.map((course, index) =>
-                                (
-                                    <CourseCard course={course} key={index} Height={"h-[400px]"} />
-                                ))
-                            }
-                        </div>
+
+                <div className="mx-auto mt-16 w-11/12 max-w-maxContent">
+                    <h2 className="section-title text-4xl md:text-5xl">Top courses in <span className="gold-text italic">{category?.name}</span></h2>
+                    <div className="mt-8">
+                        <CourseSlider Courses={catalogPageData?.differentCategory?.courses} />
+                    </div>
+                </div>
+
+                <div className="mx-auto mt-16 w-11/12 max-w-maxContent">
+                    <h2 className="section-title text-4xl md:text-5xl">Frequently bought</h2>
+                    <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                        {
+                            catalogPageData?.mostSellingCourses?.map((course, index) => (
+                                <CourseCard course={course} key={index} />
+                            ))
+                        }
                     </div>
                 </div>
             </div>
-            <Footer/>
+            <Footer />
         </div>
     )
 }

@@ -13,7 +13,6 @@ const {
 export async function getEnrolledCoursesData(token, dispatch) {
 
     dispatch(setLoading(true));
-    const toastId = toast.loading("Loading...");
     let result = [];
     try {
 
@@ -39,18 +38,15 @@ export async function getEnrolledCoursesData(token, dispatch) {
         toast.error(err.response.data.message);
 
         dispatch(setLoading(false));
-        toast.dismiss(toastId);
         throw err;
     }
 
-    toast.dismiss(toastId);
     dispatch(setLoading(false));
     return result;
 }
 
 export async function getInstructorData(token) { 
     
-    const toastId = toast.loading('Loading...');
     let result = [];
     try {
 
@@ -68,7 +64,6 @@ export async function getInstructorData(token) {
 
         result = response.data.data;
         // console.log("Result : ", response);
-        toast.success(response.data.message);
 
     } catch (error) { 
 
@@ -77,6 +72,5 @@ export async function getInstructorData(token) {
 
     }
 
-    toast.dismiss(toastId);
     return result;
 }

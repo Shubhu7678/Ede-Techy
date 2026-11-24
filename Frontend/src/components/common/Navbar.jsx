@@ -55,56 +55,63 @@ const Navbar = () => {
         setCatalogItems(!catalogItems);
     }
 
+    const [scrolled, setScrolled] = useState(false);
+    useEffect(() => {
+        const onScroll = () => setScrolled(window.scrollY > 24);
+        onScroll();
+        window.addEventListener('scroll', onScroll, { passive: true });
+        return () => window.removeEventListener('scroll', onScroll);
+    }, []);
+
     return (
-        <div className="flex h-14 items-center border-b-[1px] border-b-richblack-700" >
+        <div className={`sticky top-0 z-50 flex h-[72px] items-center border-b transition-all duration-500 ${scrolled ? 'bg-richblack-900/75 backdrop-blur-xl border-yellow-50/15' : 'bg-transparent border-transparent'}`} >
             <div className="flex w-11/12 items-center mx-auto justify-between max-w-maxContent" >
                 {/* Logo */}
                 <NavLink to="/">
                     {/* <img className="text-white bg-richblack-100 rounded-full border border-yellow-50" src={Logo} width={105} height={40} loading='lazy' alt="" /> */}
                     <div className="flex flex-row items-center gap-2">
-                        <GiMedusaHead className="text-yellow-50 text-4xl" />
-                        <p className="text-xl md:text-3xl font-mono text-blue-5">EdeTechy</p>
+                        <GiMedusaHead className="text-yellow-50 text-3xl md:text-4xl" />
+                        <p className="font-display text-2xl md:text-[1.75rem] font-semibold tracking-wide text-richblack-5">Ede<span className="gold-text italic">Techy</span></p>
                     </div>
                 </NavLink>
 
                 {/* Nav */}
                 <nav className="hidden md:block">
-                    <ul className="flex gap-6 text-richblack-25">
+                    <ul className="flex gap-9 text-[13px] font-medium tracking-[0.12em] uppercase text-richblack-25">
                         {NavbarLinks.map((value, index) => (
                             <li key={index}>
                                 {value.title === 'Catalog' ? (
 
                                     <div className="flex flex-row items-center gap-1 group relative" >
-                                        <p>Catalog</p>
-                                        <span><IoIosArrowDropdownCircle /></span>
+                                        <p className="nav-link cursor-pointer">Catalog</p>
+                                        <span className="text-yellow-50"><IoIosArrowDropdownCircle /></span>
 
-                                        <div className="invisible absolute opacity-0 left-[73%] top-[90%] translate-y-[10%] h-6 w-6 bg-richblack-5 rounded rotate-45
-                                              group-hover:visible group-hover:opacity-100 transition-all duration-200
-                                              hover:visible hover:opacity-100 " >
-                                        </div>
-                                        <div className="invisible absolute translate-x-[-50%] translate-y-[15%] top-[50%] left-[50%] flex flex-col rounded-md 
-                                          bg-richblack-5 text-richblack-900 opacity-0 transition-all duration-200 
-                                            group-hover:visible hover:visible hover:flex z-10 hover:opacity-100 group-hover-flex group-hover:opacity-100 w-[230px] p-2">
-                                            {
-                                                subLinks?.length > 0 ? (
-
-                                                    subLinks.map((value, index) => (
-
-                                                        <NavLink className="hover:text-yellow-25 hover:bg-richblack-700  px-2 py-3 rounded-md font-mono " to={`/catalog/${encodeURIComponent(value.name)}`} key={index} >
-                                                            {value.name}
-                                                        </NavLink>
-                                                    ))
-
-                                                ) : (
-                                                    <div></div>
-                                                )
-                                            }
+                                        {/* pt-4 bridges the gap so the menu doesn't close while the cursor travels to it */}
+                                        <div className="invisible absolute left-1/2 top-full z-10 -translate-x-1/2 translate-y-2 pt-4 opacity-0 transition-all duration-300 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
+                                            <div className="relative w-[270px] rounded-2xl border border-yellow-50/20 bg-richblack-800/95 p-2 text-richblack-25 normal-case tracking-normal shadow-2xl shadow-black/60 backdrop-blur-xl">
+                                                <div className="absolute -top-[7px] left-1/2 h-3.5 w-3.5 -translate-x-1/2 rotate-45 rounded-sm border-l border-t border-yellow-50/20 bg-richblack-800" />
+                                                {
+                                                    subLinks?.length > 0 ? (
+                                                        subLinks.map((value, index) => (
+                                                            <NavLink className="flex items-center justify-between rounded-xl px-3 py-3 text-sm transition-colors hover:bg-yellow-50/10 hover:text-yellow-25" to={`/catalog/${encodeURIComponent(value.name)}`} key={index} >
+                                                                {value.name}
+                                                                <span className="text-yellow-50/0 transition-colors group-hover:text-yellow-50/60">→</span>
+                                                            </NavLink>
+                                                        ))
+                                                    ) : (
+                                                        <div className="px-4 py-6 text-center">
+                                                            <p className="font-display text-xl text-richblack-5">No categories yet</p>
+                                                            <p className="mt-1 text-xs text-richblack-200">New course categories will appear here soon.</p>
+                                                        </div>
+                                                    )
+                                                }
+                                            </div>
                                         </div>
                                     </div>
                                 )
                                     : (
                                         <NavLink to={value?.path}>
-                                            <p className={`${matchRoute(value?.path) ? 'text-yellow-25' : 'text-richblack-25'}`} > {value.title}</p>
+                                            <p className={`nav-link ${matchRoute(value?.path) ? 'active text-yellow-25' : 'text-richblack-25'}`} > {value.title}</p>
                                         </NavLink>
                                     )}
                             </li>
@@ -118,12 +125,12 @@ const Navbar = () => {
                         user && user.accountType != "Instructor" && (
 
                             <NavLink to="dashboard/cart" className="hidden md:block relative">
-                                <CiShoppingCart className="text-richblack-100 text-2xl" />
+                                <CiShoppingCart className="text-richblack-25 text-2xl" />
                                 {
                                     totalItems > 0 &&
                                     (
                                         <span
-                                            className="absolute -bottom-2 -right-2 h-5 w-5 flex justify-center items-center text-sm rounded-full text-yellow-50  bg-richblack-600"
+                                            className="absolute -bottom-2 -right-2 h-5 w-5 flex justify-center items-center text-sm rounded-full text-yellow-50  bg-yellow-50 !text-black font-semibold"
                                         >{totalItems}</span>
                                     )
                                 }
@@ -135,7 +142,7 @@ const Navbar = () => {
                         token === null &&
                         (
                             <NavLink className="hidden md:block" to="/login" >
-                                <button className="border border-richblack-700 bg-richblack-700 px-2 py-1 hover:scale-95 transition-all duration-200 rounded-md">
+                                <button className="btn-ghost text-[13px] font-medium px-5 py-2 rounded-full">
                                     Login
                                 </button>
                             </NavLink>
@@ -147,8 +154,8 @@ const Navbar = () => {
                         token === null &&
                         (
                             <NavLink className="hidden md:block" to="/signup" >
-                                <button className="border border-richblack-700 bg-richblack-700 px-2 py-1 hover:scale-95 transition-all duration-200 rounded-md">
-                                    Signup
+                                <button className="btn-gold text-[13px] font-semibold px-5 py-2 rounded-full">
+                                    Sign up
                                 </button>
                             </NavLink>
                         )
@@ -169,14 +176,14 @@ const Navbar = () => {
             {/* Mobile Menu */}
             {
                 menu && (
-                    <div className="h-screen w-full absolute top-0 left-0 bg-gradient-to-b from-black to-richblack-800 z-50">
+                    <div className="h-screen w-full absolute top-0 left-0 bg-richblack-900/98 backdrop-blur-xl z-50">
                         <div className="text-richblack-200 text-xl flex justify-end p-4 cursor-pointer" >
                             <button onClick={toggleMenu}>
                                 X
                             </button>
                         </div>
                         <div className="flex flex-col gap-4 py-10 items-center justify-center h-full">
-                            <ul className="flex flex-col gap-10 h-full text-xl text-white text-center">
+                            <ul className="flex flex-col gap-10 h-full font-display text-3xl text-richblack-5 text-center">
                                 {NavbarLinks.map((value, index) => (
 
                                     <li key={index}>
@@ -227,7 +234,7 @@ const Navbar = () => {
                                     (
                                         <li>
                                             <NavLink onClick={toggleMenu} className="" to="/login" >
-                                                <button className="border border-richblack-700 bg-richblack-700 px-3 py-1 hover:scale-95 transition-all duration-200 rounded-md">
+                                                <button className="btn-ghost font-sans text-base px-6 py-2 rounded-full">
                                                     Login
                                                 </button>
                                             </NavLink>
@@ -238,7 +245,7 @@ const Navbar = () => {
                                     token === null &&
                                     (
                                         <NavLink onClick={toggleMenu} className="" to="/signup" >
-                                            <button className="border border-richblack-700 bg-richblack-700 px-2 py-1 hover:scale-95 transition-all duration-200 rounded-md">
+                                            <button className="btn-gold font-sans text-base font-semibold px-6 py-2 rounded-full">
                                                 Signup
                                             </button>
                                         </NavLink>

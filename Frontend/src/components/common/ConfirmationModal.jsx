@@ -3,23 +3,21 @@ import IconButton from './IconButton'
 
 const ConfirmationModal = ({ modalData }) => {
     return (
-        <div className="fixed inset-0 flex justify-center items-center z-50">
-            <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 backdrop-blur-sm z-40">
-                <div className="flex flex-col gap-3 p-4 bg-richblack-800 rounded-md w-[20%]">
-                    <p className="text-xl font-medium">{modalData.text1}</p>
-                    <p className="text-base text-richblack-100">{modalData.text2}</p>
-                    <div className="flex flex-row gap-3 mt-1">
-                        <IconButton
-                            text={modalData.btn1Text}
-                            customClasses="text-black font-bold py-1 px-2 rounded-md bg-yellow-50"
-                            onclick={modalData.btn1Handler} />
-                        <button
-                            className="text-white font-bold py-1 px-2 rounded-md bg-richblack-500"
-                            onClick={modalData.btn2Handler}
-                        >
-                            {modalData.btn2Text}
-                        </button>
-                    </div>
+        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/70 px-4 backdrop-blur-sm">
+            <div className="w-full max-w-sm rounded-3xl border border-yellow-50/20 bg-richblack-800 p-7 shadow-[0_40px_100px_-30px_rgba(0,0,0,0.9)]">
+                <p className="font-display text-3xl font-semibold text-richblack-5">{modalData.text1}</p>
+                <p className="mt-2 text-[15px] font-light text-richblack-100">{modalData.text2}</p>
+                <div className="mt-7 flex gap-3">
+                    <IconButton
+                        text={modalData.btn1Text}
+                        customClasses="btn-gold flex-1 rounded-full px-4 py-3 text-sm font-semibold"
+                        onclick={modalData.btn1Handler} />
+                    <button
+                        className="btn-ghost flex-1 rounded-full px-4 py-3 text-sm font-medium"
+                        onClick={modalData.btn2Handler}
+                    >
+                        {modalData.btn2Text}
+                    </button>
                 </div>
             </div>
         </div>

@@ -180,6 +180,55 @@ export function login(email, password, navigate) {
 
 }
 
+// One-click demo accounts. If the account doesn't exist yet it is created on first use.
+const DEMO_ACCOUNTS = {
+    Student: { firstName: "Demo", lastName: "Student", email: "demo.student@edetechy.com", password: "Demo@12345", accountType: "Student" },
+    Instructor: { firstName: "Demo", lastName: "Instructor", email: "demo.instructor@edetechy.com", password: "Demo@12345", accountType: "Instructor" },
+};
+
+export function demoLogin(accountType, navigate) {
+
+    const demo = DEMO_ACCOUNTS[accountType];
+
+    return async (dispatch) => {
+
+        const toastId = toast.loading(`Opening demo ${accountType.toLowerCase()} account...`);
+        dispatch(setLoading(true));
+
+        try {
+
+            let response;
+            try {
+                response = await apiConnector('POST', LOGIN_API, { email: demo.email, password: demo.password });
+            } catch (loginErr) {
+                // first use: create the demo account, then log in
+                await apiConnector('POST', SIGNUP_API, { ...demo, confirmPassword: demo.password });
+                response = await apiConnector('POST', LOGIN_API, { email: demo.email, password: demo.password });
+            }
+
+            if (!response.data.success) {
+                throw new Error(response.data.message);
+            }
+
+            toast.success(`Signed in as demo ${accountType.toLowerCase()}`);
+            dispatch(setToken(response.data.token));
+            const userImage = response.data.userExist.image ? response.data.userExist.image : null;
+            dispatch(setUser({ ...response.data.userExist, image: userImage }));
+            localStorage.setItem('token', JSON.stringify(response.data.token));
+            localStorage.setItem('user', JSON.stringify(response.data.userExist));
+            navigate('/dashboard/my-profile');
+
+        } catch (err) {
+
+            toast.error(err?.response?.data?.message || "Could not start the demo. Is the server running?");
+            console.log("Error in demo login", err);
+        }
+
+        dispatch(setLoading(false));
+        toast.dismiss(toastId);
+    }
+}
+
 export function logout(navigate) { 
 
     return async (dispatch) => { 

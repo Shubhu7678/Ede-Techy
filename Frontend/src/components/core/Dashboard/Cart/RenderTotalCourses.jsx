@@ -1,7 +1,5 @@
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
-
-import IconBtn from "../../../common/IconButton"
 import { buyCourse } from "../../../../services/operations/studentFeaturesAPI"
 
 export default function RenderTotalCourses() {
@@ -17,15 +15,14 @@ export default function RenderTotalCourses() {
     }
 
     return (
-        <div className="min-w-[280px] h-fit rounded-md border-[1px] border-richblack-700 bg-richblack-800 p-6">
-            <p className="mb-1 text-sm font-medium text-richblack-300">Total:</p>
-            <p className="mb-6 text-3xl font-medium text-yellow-100">₹ {total}</p>
-            <button
-                onClick={handleBuyCourse}
-                className="w-full bg-yellow-50 py-2 font-medium text-richblack-900 rounded-md"
-            >
-                Buy Now
+        <div className="h-fit w-full rounded-3xl border border-yellow-50/25 bg-richblack-800 p-6 lg:sticky lg:top-24 lg:w-[320px]">
+            <p className="text-xs uppercase tracking-[0.2em] text-richblack-300">Order total</p>
+            <p className="mt-2 font-display text-5xl font-semibold gold-text">₹ {total}</p>
+            <p className="mt-1 text-sm text-richblack-200">{cart.length} {cart.length === 1 ? "course" : "courses"}</p>
+            <button onClick={handleBuyCourse} className="btn-gold mt-6 w-full rounded-full py-3.5 font-semibold">
+                Checkout
             </button>
+            <p className="mt-3 text-center text-xs text-richblack-300">30-day money-back guarantee</p>
         </div>
     )
 }

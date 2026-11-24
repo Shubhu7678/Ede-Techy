@@ -47,74 +47,39 @@ const CourseReviewModal = ({ setReviewModal }) => {
 
 
   return (
-    <div className="fixed inset-0 flex justify-center items-center z-50">
-      <div className="fixed inset-0 flex justify-center items-center  bg-richblack-800 bg-opacity-50 backdrop-blur-sm z-40">
-        <div className="w-[500px] bg-richblack-900">
-          {/* Modal header  */}
-
-          <div className="flex flex-row justify-between px-4 py-4 bg-richblack-800 rounded-t-md text-white">
-            <p className="text-richblack-100">Add Review</p>
-            <button
-              onClick={() => setReviewModal(false)}
-            ><ImCancelCircle /></button>
-          </div>
-          {/* Modal Body  */}
-          <div className="mt-2 flex flex-col justify-center items-center gap-1">
-
-            <div className="flex flex-row gap-2 items-center">
-              <img className="aspect-square w-[50px] rounded-full object-cover" src={user?.image} alt="" />
-              <div className="flex flex-col gap-0">
-                <p className="text-richblack-50 text-lg" >{user?.firstName + " " + user?.lastName}</p>
-                <p className="text-richblack-100 text-sm">Posting Publicly</p>
-              </div>
+    <div className="fixed inset-0 z-[300] flex items-center justify-center bg-black/75 px-4 backdrop-blur-sm" onMouseDown={() => setReviewModal(false)}>
+      <div className="w-full max-w-lg overflow-hidden rounded-3xl border border-white/15 bg-richblack-800 shadow-2xl shadow-black" onMouseDown={(e) => e.stopPropagation()}>
+        <div className="flex items-center justify-between border-b hairline px-6 py-5">
+          <p className="font-display text-3xl font-semibold text-richblack-5">Add a review</p>
+          <button type="button" onClick={() => setReviewModal(false)} aria-label="Close"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-richblack-100 transition-colors hover:border-white/40 hover:text-richblack-5"><ImCancelCircle /></button>
+        </div>
+        <div className="p-6">
+          <div className="flex items-center gap-3">
+            {user?.image
+              ? <img className="aspect-square w-12 rounded-full object-cover" src={user.image} alt="" />
+              : <span className="flex h-12 w-12 items-center justify-center rounded-full bg-richblack-700 font-semibold text-richblack-5">{`${user?.firstName?.[0] ?? ""}${user?.lastName?.[0] ?? ""}`}</span>}
+            <div>
+              <p className="font-medium text-richblack-5">{user?.firstName + " " + user?.lastName}</p>
+              <p className="text-xs text-richblack-300">Posting publicly</p>
             </div>
-            <form
-              onSubmit={handleSubmit(onSubmit)}
-              className="my-4 w-full"
-            >
-              <div className="text-center w-full flex flex-row items-center justify-center">
-                <ReactStars
-                  count={5}
-                  size={24}
-                  onChange={ratingChanged}
-                  activeColor="#ffd700"
-                />
-              </div>
-              <div className="flex flex-col gap-1 w-full px-3 text-richblack-5">
-                <label htmlFor="courseExperience">Add Your Experience</label>
-                <textarea
-                  name="courseExperience"
-                  id="courseExperience"
-                  rows={4}
-                  className="w-full form-style px-2 py-1 bg-richblack-700"
-                  placeholder="Add Your Experience Here"
-                  {
-                  ...register('courseExperience', { required: true })
-                  }
-                ></textarea>
-                {
-                  errors.courseExperience && (
-                    <span className="text-sm text-rose-500">
-                      Please add your experience
-                    </span>
-                  )
-                }
-              </div>
-
-              <div className="flex flex-row gap-2 mt-2 justify-end px-3">
-                <button
-                  className="px-3 py-2 bg-richblack-700 rounded-md font-mono text-richblack-5"
-                  onClick={() => setReviewModal(false)}
-                >Cancel</button>
-                <button
-                  className="px-5 py-2 bg-yellow-50 rounded-md font-mono text-richblack-900"
-                  type="submit"
-                >Save</button>
-              </div>
-
-
-            </form>
           </div>
+          <form onSubmit={handleSubmit(onSubmit)} className="mt-6 flex flex-col gap-5">
+            <div>
+              <p className="mb-1 text-[13px] font-medium tracking-wide text-richblack-25">Your rating</p>
+              <ReactStars count={5} size={30} onChange={ratingChanged} activeColor="#E8C468" />
+            </div>
+            <div>
+              <label htmlFor="courseExperience" className="mb-2 block text-[13px] font-medium tracking-wide text-richblack-25">Your experience <sup className="text-pink-200">*</sup></label>
+              <textarea id="courseExperience" rows={4} className="w-full resize-y px-4 py-3.5 text-[15px]" placeholder="What did you like? What could be better?"
+                {...register('courseExperience', { required: true })}></textarea>
+              {errors.courseExperience && <span className="mt-1.5 block text-xs text-pink-200">Please add your experience</span>}
+            </div>
+            <div className="flex justify-end gap-3">
+              <button type="button" className="btn-ghost rounded-full px-6 py-2.5 text-sm font-medium" onClick={() => setReviewModal(false)}>Cancel</button>
+              <button className="btn-gold rounded-full px-7 py-2.5 text-sm font-semibold" type="submit">Submit review</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>

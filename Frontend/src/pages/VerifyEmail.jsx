@@ -5,90 +5,64 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { MdSettingsBackupRestore } from "react-icons/md";
 import OtpInput from 'react-otp-input';
 import { sendOtp, signUp } from '../services/operations/authAPI';
-
+import CenteredCard from '../components/core/Auth/CenteredCard';
 
 const VerifyEmail = () => {
 
-    const { loading,signupData } = useSelector((state) => state.auth);
+    const { loading, signupData } = useSelector((state) => state.auth);
     const [otp, setOtp] = useState("");
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     useEffect(() => {
-
         if (!signupData) {
-
             navigate('/');
         }
     }, []);
-    
+
+    if (!signupData) return null;
     const { firstName, lastName, email, password, confirmPassword, accountType } = signupData;
 
-    const resendOtp = () => { 
+    const resendOtp = () => dispatch(sendOtp(email, navigate));
 
-        dispatch(sendOtp(email, navigate));
-    }
-
-    const handleOnSubmit = (e) => { 
-
+    const handleOnSubmit = (e) => {
         e.preventDefault();
-        // console.log(otp);
-        dispatch(signUp(firstName, lastName, email, password, confirmPassword, accountType, otp,navigate));        
+        dispatch(signUp(firstName, lastName, email, password, confirmPassword, accountType, otp, navigate));
     }
 
     return (
-        <div>
-            {
-                loading ?
-                    (
-                        <div className="w-full text-center" >Loading...</div>
-                    ) :
-                    (
-                        <div className="w-full min-h-[calc(100vh-3.5rem)] flex items-center justify-center">
-                            <div className="w-[90%] lg:w-[35%] flex flex-col gap-3" >
-                                <h1 className="text-richblack-5 font-semibold text-3xl" >Verify Email</h1>
-                                <p className="text-richblack-100 " >A verification code has been sent to your email. Enter the Code below</p>
-                                <form onSubmit={handleOnSubmit}>
-                                    {/* //* User npm react otp input package here for adding otp  */}
-                                    <OtpInput
-                                        value={otp}
-                                        onChange={setOtp}
-                                        numInputs={6}
-                                        renderSeparator={<span
-                                            style={{
-                                                color: "white",
-                                                
-                                             }}>-</span>}
-                                        renderInput={(props) => <input {...props} />}
-                                        inputStyle={{
-                                            width: "60px",
-                                            height: "40px",
-                                            backgroundColor: "white",
-                                            borderRadius: "5px",
-                                            marginRight: "5px",
-                                            marginLeft : "5px",
-                                        }}
-                                    />
-                                    <button type="submit" className="w-full mt-4 rounded-md bg-yellow-100 py-3 text-richblack-800">
-                                        Verify Email
-                                    </button>
-                                </form>
-                                <div className="flex justify-between">
-                                    <NavLink to="/login" className="flex items-center gap-1 group"  >
-                                        <FaArrowLeft className="text-blue-100 text-sm group-hover:scale-90 duration-200 transition " />
-                                        <p className="text-blue-100 text-sm" >Back to Login</p>
-                                    </NavLink>
-                                    <button onClick={resendOtp} className="flex items-center gap-1 text-blue-100 text-sm" >
-                                        <MdSettingsBackupRestore />
-                                        <p className="text-blue-100 text-sm" >Resend it</p>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                    )
+        <CenteredCard
+            eyebrow="One last step"
+            title="Verify your email"
+            subtitle="A 6-digit verification code has been sent to your email. Enter it below."
+            footer={
+                <div className="flex items-center justify-between text-sm">
+                    <NavLink to="/login" className="group inline-flex items-center gap-2 text-richblack-100 transition-colors hover:text-yellow-25">
+                        <FaArrowLeft className="text-xs transition-transform duration-300 group-hover:-translate-x-1" /> Back to login
+                    </NavLink>
+                    <button onClick={resendOtp} className="inline-flex items-center gap-1.5 text-yellow-25 transition-colors hover:text-yellow-5">
+                        <MdSettingsBackupRestore /> Resend code
+                    </button>
+                </div>
             }
-        </div>
+        >
+            <form onSubmit={handleOnSubmit} className="flex flex-col gap-6">
+                <OtpInput
+                    value={otp}
+                    onChange={setOtp}
+                    numInputs={6}
+                    containerStyle={{ justifyContent: "space-between", gap: "8px" }}
+                    renderInput={(props) => (
+                        <input {...props}
+                            className="!h-14 !w-full min-w-0 rounded-xl border border-white/10 bg-richblack-900/60 text-center text-xl font-semibold text-richblack-5 outline-none transition-colors focus:border-yellow-50/70"
+                            style={{}} />
+                    )}
+                />
+                <button type="submit" disabled={loading || otp.length < 6} className="btn-gold w-full rounded-full py-3.5 font-semibold tracking-wide disabled:opacity-60">
+                    {loading ? "Verifying..." : "Verify email"}
+                </button>
+            </form>
+        </CenteredCard>
     )
 }
 

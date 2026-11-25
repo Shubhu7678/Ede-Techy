@@ -4,7 +4,6 @@ import Home from './pages/Home'
 import { FaArrowRight } from "react-icons/fa";
 import Navbar from './components/common/Navbar';
 import SmoothScroll from './components/common/SmoothScroll';
-import GoldCursor from './components/common/GoldCursor';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import ForgotPassword from './pages/ForgotPassword';
@@ -36,14 +35,13 @@ const App = () => {
 
   const { user } = useSelector((state) => state.profile);
   const { pathname } = useLocation();
-  // dashboard and the video player behave like an app: no site navbar, no decorative cursor
+  // dashboard and the video player behave like an app: no site navbar
   const appShell = /^\/(dashboard|view-course)/.test(pathname);
   const hideNavbar = appShell;
 
   return (
     <div className="w-screen min-h-screen bg-richblack-900 flex flex-col font-inter" >
       <SmoothScroll />
-      {!appShell && <GoldCursor />}
       {!hideNavbar && <Navbar />}
       <Routes>
 

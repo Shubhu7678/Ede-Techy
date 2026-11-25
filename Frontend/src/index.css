@@ -154,3 +154,12 @@ html.lenis, html.lenis body { height: auto; }
 }
 .dash button[class*="bg-richblack-900"], .dash button[class*="bg-richblack-700"]:not([role]) { border-radius: 9999px; }
 .dash label { color: #C7C3B8; }
+
+/* ---- notifications ---- */
+@keyframes toastIn { from { opacity: 0; transform: translateY(-14px) scale(.97); } to { opacity: 1; transform: none; } }
+@keyframes toastOut { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(-10px) scale(.97); } }
+@keyframes toastBar { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+.toast-in { animation: toastIn .35s cubic-bezier(.2, .8, .2, 1) both; }
+.toast-out { animation: toastOut .25s ease-in both; }
+.toast-bar { animation-name: toastBar; animation-timing-function: linear; animation-fill-mode: forwards; }
+@media (prefers-reduced-motion: reduce) { .toast-in, .toast-out { animation-duration: .01s; } }

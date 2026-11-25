@@ -5,16 +5,14 @@ import './index.css'
 import { BrowserRouter } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import store from './store.jsx';
-import { Toaster } from 'react-hot-toast'
-import AnimatedCursor from "react-animated-cursor"
+import AppToaster from './components/common/AppToaster.jsx'
 
 createRoot(document.getElementById('root')).render(
   
     <Provider store={store}>
     <BrowserRouter>
         <App />
-      <Toaster />
-       {/* <AnimatedCursor innerSize={24} outerSize={24} color='128,128,128' outerScale={1} /> */}
+      <AppToaster />
       </BrowserRouter>
       </Provider>
   

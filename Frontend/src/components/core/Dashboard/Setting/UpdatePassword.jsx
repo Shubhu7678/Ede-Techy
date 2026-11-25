@@ -12,7 +12,10 @@ const UpdatePassword = () => {
   const dispatch = useDispatch();
   const [busy, setBusy] = useState(false);
   const [show, setShow] = useState({ oldPassword: false, newPassword: false });
-  const { register, handleSubmit, reset, formState: { errors } } = useForm();
+  const { register, handleSubmit, reset, watch, formState: { errors } } = useForm();
+  const next = watch('newPassword') || '';
+  const score = [next.length >= 8, /[A-Z]/.test(next) && /[a-z]/.test(next), /\d/.test(next), /[^A-Za-z0-9]/.test(next)].filter(Boolean).length;
+  const strength = next ? ['Weak', 'Fair', 'Good', 'Strong'][Math.max(score - 1, 0)] : '';
 
   const submit = async (data) => {
     setBusy(true);
@@ -39,13 +42,22 @@ const UpdatePassword = () => {
   );
 
   return (
-    <form onSubmit={handleSubmit(submit)} className="rounded-3xl border border-white/10 bg-richblack-800/80 p-6 md:p-8">
-      <p className="font-display text-2xl font-semibold">Password</p>
-      <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
+    <form onSubmit={handleSubmit(submit)}>
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
         {field("oldPassword", "Current password", "Enter current password")}
-        {field("newPassword", "New password", "Enter new password")}
+        <div>
+          {field("newPassword", "New password", "Enter new password")}
+          {next && (
+            <div className="mt-3">
+              <div className="flex gap-1.5">
+                {[1, 2, 3, 4].map((n) => <span key={n} className={`h-1 flex-1 rounded-full transition-colors ${score >= n ? "bg-richblack-5" : "bg-white/10"}`} />)}
+              </div>
+              <p className="mt-1.5 text-xs text-richblack-200">{strength} · use 8+ characters with upper and lower case, a number and a symbol</p>
+            </div>
+          )}
+        </div>
       </div>
-      <div className="mt-7 flex justify-end">
+      <div className="mt-7 flex justify-end border-t border-white/10 pt-6">
         <button type="submit" disabled={busy} className="btn-gold rounded-full px-7 py-2.5 text-sm font-semibold disabled:opacity-60">
           {busy ? "Updating..." : "Update password"}
         </button>
